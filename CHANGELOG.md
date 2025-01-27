@@ -1,0 +1,44 @@
+# Changelog
+
+All notable changes to Shared Sparks will be documented in this file.
+
+## [Unreleased]
+
+### Added
+- GitHub OAuth authentication setup
+- Environment variables configuration (.env.local)
+- Security: Added .env.local to .gitignore
+- Security: Protected OAuth client secrets
+- Security: Implemented secure callback URLs
+- Security: Added NEXTAUTH_SECRET for session encryption
+- AuthProvider component for client-side auth handling
+- Proper server/client component separation
+- Working GitHub sign-in functionality
+
+## [1.0.0] - 2024-03-19
+
+### Added
+- Initial project setup with Next.js
+- Custom logo and header design
+- Responsive navigation
+- Hero section with main messaging
+- Search Solutions and Showcase Solutions buttons
+- Community section
+- Footer with social links
+- Tailwind CSS integration
+- Custom color scheme implementation
+- Responsive design for all screen sizes
+
+### Changed
+- Updated button styles with hover effects
+- Enhanced header image sizing
+- Improved navigation layout
+- Styled Sign In and Register buttons
+- Updated About Us link to mAIven website
+
+### Fixed
+- Tailwind CSS configuration issues
+- Header image responsiveness
+- Favicon implementation
+- Button hover states
+- Security: Protected sensitive environment variables
