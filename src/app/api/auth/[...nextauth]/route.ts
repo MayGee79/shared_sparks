@@ -2,6 +2,17 @@ import NextAuth from 'next-auth'
 import { PrismaClient } from '@prisma/client'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import GithubProvider from "next-auth/providers/github"
+import GoogleProvider from "next-auth/providers/google"
+import { Session } from "next-auth"
+
+interface ExtendedSession extends Session {
+  user: {
+    id: string;
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+  }
+}
 
 const prisma = new PrismaClient()
 const handler = NextAuth({
@@ -10,6 +21,12 @@ const handler = NextAuth({
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
+      allowDangerousEmailAccountLinking: true,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID!,
+      clientSecret: process.env.GOOGLE_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   pages: {
@@ -17,20 +34,16 @@ const handler = NextAuth({
     signIn: '/auth/login',
   },
   session: {
-    strategy: "jwt",
+    strategy: "database",
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: true,
   callbacks: {
-    async session({ session, user }) {
-      return {
-        ...session,
-        user: {
-          ...session.user,
-          id: user.id,
-          // Remove userType since it doesn't exist on AdapterUser type
-          },
+    session: async ({ session, user }): Promise<ExtendedSession> => {
+      if (session?.user) {
+        (session.user as any).id = user.id;
       }
+      return session as ExtendedSession;
     },
   },
 })

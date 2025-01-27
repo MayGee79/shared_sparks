@@ -14,6 +14,12 @@ All notable changes to Shared Sparks will be documented in this file.
 - AuthProvider component for client-side auth handling
 - Proper server/client component separation
 - Working GitHub sign-in functionality
+- Google OAuth authentication setup
+- Multi-provider authentication support
+- Account linking between GitHub and Google
+- Extended session handling with proper TypeScript types
+- Custom error and sign-in pages
+- Debug mode for authentication flow
 
 ## [1.0.0] - 2024-03-19
 
