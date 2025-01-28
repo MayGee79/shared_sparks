@@ -57,6 +57,39 @@ model User {
   sessions      Session[]
   problems      Problem[]
   comments      Comment[]
+  
+  // Basic Profile
+  username      String?   @unique
+  bio           String?   @db.Text
+  
+  // Professional Background
+  industry       String?
+  role          String?
+  expertise     String[]
+  skills        String[]
+  
+  // Interests and Goals
+  interests     String[]
+  goals         String[]
+  
+  // Contact and Privacy
+  allowCollaboration Boolean @default(true)
+  profileVisibility  String  @default("public")
+  notificationPrefs  Json?   // For storing notification settings
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now())
+  
+  // Social Links
+  linkedin        String?
+  github          String?
+  twitter         String?
+  
+  // Collaboration
+  sentRequests     CollaborationRequest[] @relation("SentRequests")
+  receivedRequests CollaborationRequest[] @relation("ReceivedRequests")
+  preferences      UserPreference?
 }
 
 model Problem {
@@ -90,4 +123,26 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model CollaborationRequest {
+  id          String   @id @default(cuid())
+  senderId    String
+  receiverId  String
+  status      String   @default("pending")
+  message     String?
+  createdAt   DateTime @default(now())
+  
+  sender      User     @relation("SentRequests", fields: [senderId], references: [id])
+  receiver    User     @relation("ReceivedRequests", fields: [receiverId], references: [id])
+  
+  @@map("collaboration_requests")
+}
+
+model UserPreference {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id])
+  notifications Boolean  @default(true)
+  theme         String   @default("light")
 }

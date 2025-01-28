@@ -13,6 +13,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
+import { redirect } from 'next/navigation'
 
 ChartJS.register(
   CategoryScale,
@@ -25,7 +26,15 @@ ChartJS.register(
 )
 
 export default function DashboardPage() {
-  const { data: session } = useSession()
+  const { data: session, status } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect('/auth/login')
+    },
+  })
+
+  console.log('Session:', session)
+  console.log('Status:', status)
 
   const activityData = {
     labels: ['May 1', 'May 2', 'May 3', 'May 4', 'May 5', 'May 6', 'May 7'],
@@ -42,9 +51,25 @@ export default function DashboardPage() {
       {/* Left Sidebar */}
       <div className="w-64 bg-[#f4b941] p-6 flex flex-col fixed h-full">
         <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-[#100359] rounded-full mx-auto mb-4"></div>
-          <h2 className="text-[#100359] font-bold text-xl">May Gee</h2>
-          <p className="text-[#100359] text-sm">membership tier</p>
+          {session?.user?.image ? (
+            <Image
+              src={session.user.image}
+              alt={session.user.name || 'Profile'}
+              width={96}
+              height={96}
+              className="rounded-full mx-auto mb-4"
+            />
+          ) : (
+            <div className="w-24 h-24 bg-[#100359] rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl">
+              {session?.user?.name?.charAt(0) || '?'}
+            </div>
+          )}
+          <h2 className="text-[#100359] font-bold text-xl">
+            {session?.user?.name || 'Welcome!'}
+          </h2>
+          <p className="text-[#100359] text-sm">
+            {session?.user?.email}
+          </p>
         </div>
 
         <nav className="flex-1 space-y-3">

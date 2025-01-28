@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import LogoMenu from '@/components/LogoMenu'
+import SearchBar from '@/components/SearchBar'
 
 export default function Home() {
   return (
@@ -8,15 +10,11 @@ export default function Home() {
         {/* Top Bar */}
         <div className="py-2 px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <div className="flex items-center">
-              <Image 
-                src="/logo.png"
-                alt="Shared Sparks"
-                width={32}
-                height={32}
-                className="h-8 w-auto"
-                priority
-              />
+            <div className="flex items-center gap-4">
+              <LogoMenu />
+              <div className="w-64">
+                <SearchBar />
+              </div>
             </div>
             <div className="flex gap-6">
               <Link 

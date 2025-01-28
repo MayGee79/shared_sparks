@@ -1,51 +1,58 @@
-import NextAuth from 'next-auth'
-import { PrismaClient } from '@prisma/client'
-import { PrismaAdapter } from '@auth/prisma-adapter'
+import NextAuth from "next-auth"
+import { Session } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google"
-import { Session } from "next-auth"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import prisma from '@/lib/prisma'
+import { JWT, DefaultJWT } from 'next-auth/jwt'
+import { User } from 'next-auth'
 
-interface ExtendedSession extends Session {
-  user: {
-    id: string;
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  }
-}
-
-const prisma = new PrismaClient()
-const handler = NextAuth({
+const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
-      allowDangerousEmailAccountLinking: true,
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID!,
       clientSecret: process.env.GOOGLE_SECRET!,
-      allowDangerousEmailAccountLinking: true,
     }),
   ],
-  pages: {
-    error: '/auth/error',
-    signIn: '/auth/login',
+  callbacks: {
+    async session({ session, token }: { session: Session, token: JWT }) {
+      if (session.user) {
+        session.user.id = token.sub
+        session.user.role = 'user'
+        session.user.membershipTier = 'free'
+        session.user.joinedDate = new Date().toISOString()
+        
+        // Get user preferences from database
+        // const userPreferences = await prisma.userPreference.findUnique({
+        //   where: { userId: user.id }
+        // })
+
+        session.user.preferences = {
+          notifications: true,
+          theme: 'light'
+        }
+      }
+      return session as Session
+    },
+    async jwt({ token, user }: { token: JWT & DefaultJWT, user: User | null }) {
+      if (user) {
+        token.id = user.id
+        token.role = user.role
+        token.membershipTier = user.membershipTier
+        token.joinedDate = user.joinedDate
+      }
+      return token
+    }
   },
   session: {
-    strategy: "database",
+    strategy: "jwt" as const,
   },
-  secret: process.env.NEXTAUTH_SECRET,
-  debug: true,
-  callbacks: {
-    session: async ({ session, user }): Promise<ExtendedSession> => {
-      if (session?.user) {
-        (session.user as any).id = user.id;
-      }
-      return session as ExtendedSession;
-    },
-  },
-})
+}
 
-export { handler as GET, handler as POST }
+const handler = NextAuth(authOptions)
+export { handler as GET, handler as POST, handler as HEAD, handler as OPTIONS }

@@ -34,3 +34,54 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+# Shared Sparks
+
+A platform for connecting problem-solvers with software solutions.
+
+## Roadmap
+
+- [x] User Authentication
+- [x] Profile Management
+  - [ ] Personal and Professional Background
+    - [ ] Industry/Role Selection
+    - [ ] Expertise/Skills Tags
+    - [ ] Experience Level
+  - [ ] Interests and Goals
+    - [ ] Interest Categories
+    - [ ] Platform Goals
+    - [ ] Project Preferences
+  - [ ] Contact and Networking
+    - [x] Social Media Integration
+    - [ ] Collaboration Settings
+  - [ ] Customization and Privacy
+    - [ ] Visibility Controls
+    - [ ] Notification Preferences
+- [ ] Problem Submission
+- [ ] Solution Matching
+- [ ] Feedback System
+  - [ ] User-to-User Feedback
+  - [ ] Platform Feedback Form
+  - [ ] Rating System for Solutions
+  - [ ] Comment Upvoting
+- [ ] Analytics Dashboard
+- [ ] Email Notifications
+
+## Profile System Details
+
+The profile system includes:
+- Industry and role categorization
+- Expertise and skills tagging
+- Interest-based matching
+- Collaboration preferences
+- Privacy controls
+- Social media integration
+- Notification settings
+
+## Feedback System Details
+
+The feedback system will include:
+- Platform feedback form for general user experience
+- Solution rating system
+- Comment system with upvoting
+- User-to-user feedback for collaborations
