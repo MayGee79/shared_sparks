@@ -1,4 +1,3 @@
-import NextAuth from "next-auth"
 import { Session } from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import GoogleProvider from "next-auth/providers/google"
@@ -26,12 +25,6 @@ export const authOptions = {
         session.user.role = 'user'
         session.user.membershipTier = 'free'
         session.user.joinedDate = new Date().toISOString()
-        
-        // Get user preferences from database
-        // const userPreferences = await prisma.userPreference.findUnique({
-        //   where: { userId: user.id }
-        // })
-
         session.user.preferences = {
           notifications: true,
           theme: 'light'
@@ -52,7 +45,4 @@ export const authOptions = {
   session: {
     strategy: "jwt" as const,
   },
-}
-
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST, handler as HEAD, handler as OPTIONS }
+} 
