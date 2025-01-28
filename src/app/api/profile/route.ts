@@ -28,33 +28,38 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
-    }
+  const session = await getServerSession(authOptions)
+  if (!session?.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
 
+  try {
     const data = await request.json()
     
-    const updatedUser = await prisma.user.update({
-      where: { email: session.user.email },
+    const profile = await prisma.user.update({
+      where: { id: session.user.id },
       data: {
-        username: data.username,
         name: data.fullName,
         bio: data.bio,
+        // Removing location since it's not a valid field in the UserUpdateInput type
+        industry: data.industry,
+        role: data.role,
+        expertise: data.expertise,
+        skills: data.skills,
+        interests: data.interests,
+        goals: data.goals,
         twitter: data.twitter,
         linkedin: data.linkedin,
         github: data.github,
-      },
+        allowCollaboration: data.allowCollaboration,
+        profileVisibility: data.profileVisibility,
+        notificationPrefs: data.notificationPrefs
+      }
     })
 
-    return NextResponse.json(updatedUser)
+    return NextResponse.json(profile)
   } catch (error) {
     console.error('Profile update error:', error)
-    return NextResponse.json(
-      { error: 'Failed to update profile' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 })
   }
 }

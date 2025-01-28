@@ -69,8 +69,8 @@ model User {
   skills        String[]
   
   // Interests and Goals
-  interests     String[]
-  goals         String[]
+  interests     String[] @default([])
+  goals         String[] @default([])
   
   // Contact and Privacy
   allowCollaboration Boolean @default(true)
