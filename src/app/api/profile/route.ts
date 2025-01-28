@@ -1,39 +1,29 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { PrismaClient } from '@prisma/client'
+import prisma from '@/lib/prisma'
 import { authOptions } from '../auth/[...nextauth]/route'
 
-const prisma = new PrismaClient()
-
 export async function GET() {
-  try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
-    }
+  const session = await getServerSession(authOptions)
+  if (!session?.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
 
-    const user = await prisma.user.findUnique({
-      where: { email: session.user.email },
+  try {
+    const profile = await prisma.user.findUnique({
+      where: { id: session.user.id },
       select: {
+        id: true,
         name: true,
         email: true,
-        bio: true,
-        company: true,
-        location: true,
-        twitter: true,
-        linkedin: true,
-        github: true,
-      },
+        image: true
+      }
     })
 
-    return NextResponse.json(user)
+    return NextResponse.json(profile)
   } catch (error) {
     console.error('Profile fetch error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch profile' },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 })
   }
 }
 
@@ -53,8 +43,6 @@ export async function PUT(request: Request) {
         username: data.username,
         name: data.fullName,
         bio: data.bio,
-        company: data.company,
-        location: data.location,
         twitter: data.twitter,
         linkedin: data.linkedin,
         github: data.github,
