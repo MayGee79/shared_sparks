@@ -1,9 +1,48 @@
+'use client'
 import Link from 'next/link'
 import Image from 'next/image'
 import LogoMenu from '@/components/LogoMenu'
 import SearchBar from '@/components/SearchBar'
+import { useState, useEffect } from 'react'
 
 export default function Home() {
+  const [currentSlide, setCurrentSlide] = useState(0)
+
+  const slides = [
+    {
+      image: '/about001.jpg',
+      title: 'Connect & Innovate',
+      description: 'Join a community of innovators and problem solvers'
+    },
+    {
+      image: '/about002.jpg',
+      title: 'Share Your Needs',
+      description: 'Post your SaaS needs and get matched with solutions'
+    },
+    {
+      image: '/about003.jpg',
+      title: 'Build Solutions',
+      description: 'Create the next great SaaS product based on real demand'
+    },
+    {
+      image: '/about004.jpg',
+      title: 'Grow Together',
+      description: 'Scale your solutions with our supportive community'
+    },
+    {
+      image: '/about005.jpg',
+      title: 'Make an Impact',
+      description: 'Transform ideas into successful SaaS businesses'
+    }
+  ]
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length)
+    }, 5000)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <main style={{ backgroundColor: '#eef7ff' }} className="min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -177,37 +216,83 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Community Section */}
-          <div className="bg-[#100359] text-white py-32">
+          {/* Community Section - Reduced height */}
+          <div className="bg-[#100359] text-white py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <h2 className="text-4xl font-bold tracking-tight">
+              <h2 className="text-3xl font-bold tracking-tight">
                 Join a Growing Community of Innovators
               </h2>
-              <p className="mt-8 text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              <p className="mt-6 text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 Be part of a global ecosystem where creators and thinkers collaborate to solve real-world problems. 
                 Together, we're shaping the future of SaaS.
               </p>
               <Link 
                 href="/register"
-                className="mt-12 inline-block px-10 py-5 text-white border-2 border-white hover:bg-[#f4b941] hover:border-[#f4b941] hover:text-white rounded-md transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg font-medium"
+                className="mt-8 inline-block px-8 py-3 text-white border-2 border-white hover:bg-[#f4b941] hover:border-[#f4b941] hover:text-white rounded-md transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg font-medium"
               >
                 Join Now
               </Link>
             </div>
           </div>
 
-          {/* Final CTA Section */}
-          <div className="bg-[#f4b941] text-[#100359] py-32">
+          {/* Success Stories Slideshow */}
+          <section className="py-16 bg-[#eef7ff]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 className="text-3xl font-bold text-center text-[#100359] mb-12">
+                Success Stories
+              </h2>
+              
+              {/* Slideshow */}
+              <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl mb-16">
+                {slides.map((slide, index) => (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 transition-opacity duration-1000
+                      ${index === currentSlide ? 'opacity-100' : 'opacity-0'}`}
+                  >
+                    <Image
+                      src={slide.image}
+                      alt={slide.title}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="text-center text-white max-w-2xl mx-auto px-4">
+                        <h3 className="text-3xl font-bold mb-4">{slide.title}</h3>
+                        <p className="text-xl">{slide.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+               
+                {/* Slide Indicators */}
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  {slides.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentSlide(index)}
+                      className={`w-3 h-3 rounded-full transition-colors
+                        ${index === currentSlide ? 'bg-white' : 'bg-white/50'}`}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Final CTA Section - Reduced height */}
+          <div className="bg-[#f4b941] text-[#100359] py-16">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-              <h2 className="text-4xl font-bold tracking-tight">
+              <h2 className="text-3xl font-bold tracking-tight">
                 Ready to Spark the Next Revolution?
               </h2>
-              <p className="mt-8 text-xl max-w-3xl mx-auto leading-relaxed">
+              <p className="mt-6 text-lg max-w-3xl mx-auto leading-relaxed">
                 Submit your challenges, discover innovative ideas, and collaborate with creators to turn possibilities into realities.
               </p>
               <Link 
                 href="/get-started"
-                className="mt-12 inline-block px-10 py-5 text-[#100359] border-2 border-[#100359] hover:bg-[#100359] hover:text-white rounded-md transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg font-medium"
+                className="mt-8 inline-block px-8 py-3 text-[#100359] border-2 border-[#100359] hover:bg-[#100359] hover:text-white rounded-md transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg font-medium"
               >
                 Start Now
               </Link>

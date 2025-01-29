@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
+import Image from 'next/image'
 
 interface CollaborationRequest {
   id: string;
@@ -13,6 +14,7 @@ interface CollaborationRequest {
 export default function ProfilePage() {
   const { data: session } = useSession()
   const [formData, setFormData] = useState({
+    profileImage: '',
     // Basic Info
     fullName: '',
     bio: '',
@@ -48,6 +50,8 @@ export default function ProfilePage() {
   const [collabMessage, setCollabMessage] = useState('')
   const [collaborationRequests, setCollaborationRequests] = useState<CollaborationRequest[]>([])
 
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   useEffect(() => {
     const loadProfile = async () => {
       try {
@@ -55,6 +59,7 @@ export default function ProfilePage() {
         if (response.ok) {
           const data = await response.json()
           setFormData({
+            profileImage: data.profileImage || '',
             fullName: data.name || '',
             bio: data.bio || '',
             company: data.company || '',
@@ -177,6 +182,34 @@ export default function ProfilePage() {
     }
   }
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size must be less than 5MB')
+      return
+    }
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+
+      if (!response.ok) throw new Error('Upload failed')
+
+      const data = await response.json()
+      setFormData(prev => ({ ...prev, profileImage: data.url }))
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      alert('Failed to upload image')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#55b7ff]/10 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-8">
@@ -187,7 +220,52 @@ export default function ProfilePage() {
           <section>
             <h2 className="text-xl font-semibold text-[#100359] mb-4">Basic Information</h2>
             <div className="space-y-4">
-              {/* Existing basic fields */}
+              <div className="mb-6">
+                <div className="flex items-center space-x-6">
+                  <div className="relative w-24 h-24">
+                    {formData.profileImage ? (
+                      <Image
+                        src={formData.profileImage}
+                        alt="Profile"
+                        fill
+                        className="rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-400">No Image</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-col space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="px-4 py-2 text-sm bg-[#55b7ff] text-white rounded-md hover:bg-[#55b7ff]/90"
+                    >
+                      Change Photo
+                    </button>
+                    {formData.profileImage && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, profileImage: '' }))}
+                        className="px-4 py-2 text-sm text-red-600 hover:text-red-700"
+                      >
+                        Remove Photo
+                      </button>
+                    )}
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <p className="text-xs text-gray-500">
+                      JPG, GIF or PNG. Max size 5MB.
+                    </p>
+                  </div>
+                </div>
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Full Name</label>
                 <input
