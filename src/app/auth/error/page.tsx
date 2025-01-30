@@ -1,27 +1,24 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 
-export default function AuthError() {
+function ErrorContent() {
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="rounded-lg bg-white p-8 shadow-lg">
-        <h1 className="mb-4 text-2xl font-bold text-red-600">
-          Authentication Error
-        </h1>
-        <p className="text-gray-600">
-          {error || 'An error occurred during authentication.'}
-        </p>
-        <a
-          href="/"
-          className="mt-4 inline-block rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-        >
-          Return Home
-        </a>
-      </div>
+    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+      <h1 className="text-4xl font-bold">Error</h1>
+      <p className="mt-4">{error || 'Something went wrong.'}</p>
     </div>
+  )
+}
+
+export default function ErrorPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ErrorContent />
+    </Suspense>
   )
 }
