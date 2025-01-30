@@ -1,26 +1,26 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import prisma from '@/lib/prisma'
+import { authOptions } from '@/lib/auth'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(request: Request) {
-  const session = await getServerSession()
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
   try {
-    const { type } = await request.json()
-    
-    // Use raw SQL instead of Prisma model
-    const result = await prisma.$executeRaw`
-      INSERT INTO useractivity (id, "userId", type, timestamp)
-      VALUES (gen_random_uuid(), ${session.user.id}, ${type}, NOW())
-      RETURNING id, type, timestamp
-    `
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.email) {
+      return new NextResponse('Unauthorized', { status: 401 })
+    }
 
-    return NextResponse.json({ success: true, result })
+    const json = await request.json()
+    const activity = await prisma.activity.create({
+      data: {
+        ...json,
+        userEmail: session.user.email,
+      },
+    })
+
+    return NextResponse.json(activity)
   } catch (error) {
-    console.error('Activity creation error:', error)
-    return NextResponse.json({ error: 'Failed to create activity' }, { status: 500 })
+    console.error('Error creating activity:', error)
+    return new NextResponse('Error creating activity', { status: 500 })
   }
 }
