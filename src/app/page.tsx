@@ -57,7 +57,7 @@ export default function Home() {
             </div>
             <div className="flex gap-6">
               <Link 
-                href="/auth/login"
+                href="/auth/signin"
                 className="px-6 py-2 text-[#55b7ff] border-2 border-[#55b7ff] hover:bg-[#f4b941] hover:border-[#f4b941] hover:text-white rounded-md transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Sign In
