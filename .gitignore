@@ -174,3 +174,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 >>>>>>> origin/main
+.env*.local
