@@ -19,6 +19,10 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
+    async signIn({ user, account, profile }) {
+      console.log('SignIn callback:', { user, account, profile })
+      return true
+    },
     async session({ session, token }: { session: Session, token: JWT }) {
       if (session.user) {
         session.user.id = token.sub
