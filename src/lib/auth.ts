@@ -1,10 +1,8 @@
-import { Session, AuthOptions } from "next-auth"
-import GitHubProvider from 'next-auth/providers/github'
+import { AuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
-import { PrismaAdapter } from "@auth/prisma-adapter"
+import GitHubProvider from "next-auth/providers/github"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import prisma from '@/lib/prisma'
-import { JWT, DefaultJWT } from 'next-auth/jwt'
-import { User } from 'next-auth'
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -16,37 +14,40 @@ export const authOptions: AuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
-  callbacks: {
-    async signIn({ user, account, profile }) {
-      console.log('SignIn callback:', { user, account, profile })
-      return true
-    },
-    async session({ session, token }: { session: Session, token: JWT }) {
-      if (session.user) {
-        session.user.id = token.sub
-        session.user.role = 'user'
-        session.user.membershipTier = 'free'
-        session.user.joinedDate = new Date().toISOString()
-        session.user.preferences = {
-          notifications: true,
-          theme: 'light'
+      authorization: {
+        params: {
+          scope: 'openid email profile',
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
         }
       }
-      return session as Session
+    }),
+  ],
+  debug: true,
+  secret: process.env.NEXTAUTH_SECRET,
+  session: { strategy: "jwt" },
+  pages: {
+    signIn: '/auth/signin',
+    error: '/auth/error',
+    signOut: '/auth/signout'
+  },
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      if (url === baseUrl) return `${baseUrl}/dashboard`
+      if (url.startsWith(baseUrl)) return url
+      return baseUrl
     },
-    async jwt({ token, user }: { token: JWT & DefaultJWT, user: User | null }) {
-      if (user) {
-        token.id = user.id
-        token.role = user.role
-        token.membershipTier = user.membershipTier
-        token.joinedDate = user.joinedDate
+    async session({ session, token }) {
+      console.log('Session callback:', { session, token })
+      if (session.user) {
+        session.user.id = token.sub
       }
+      return session
+    },
+    async jwt({ token, user, account }) {
+      console.log('JWT callback:', { token, user, account })
       return token
     }
-  },
-  session: {
-    strategy: "jwt" as const,
-  },
+  }
 } 

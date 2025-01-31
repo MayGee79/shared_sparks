@@ -5,7 +5,7 @@ import AuthProvider from '@/components/providers/AuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Shared Sparks',
   description: 'Connect and share software solutions',
 }
