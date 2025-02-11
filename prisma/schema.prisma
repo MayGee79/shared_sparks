@@ -46,27 +46,28 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  userType      UserType  @default(PROBLEM_SUBMITTER)
-  hashedPassword String?  @default("")
-  accounts      Account[]
-  sessions      Session[]
-  problems      Problem[]
-  comments      Comment[]
+  id             String    @id @default(cuid())
+  firstName      String?   // optionally add firstName
+  lastName       String?   // optionally add lastName
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  userType       UserType  @default(PROBLEM_SUBMITTER)
+  hashedPassword String?   @default("")
+  accounts       Account[]
+  sessions       Session[]
+  problems       Problem[]
+  comments       Comment[]
   
   // Basic Profile
-  username      String?   @unique
-  bio           String?   @db.Text
+  username       String?   @unique
+  bio            String?   @db.Text
   
   // Professional Background
   industry       String?
-  role          String?
-  expertise     String[]
-  skills        String[]
+  role           String?
+  expertise      String[]
+  skills         String[]
   
   // Interests and Goals
   interests     String[] @default([])

@@ -9,14 +9,19 @@ export async function GET(request: Request) {
   if (!userId) {
     return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
   }
+  
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { firstName: true, lastName: true }
+    select: { firstName: true, lastName: true, username: true }
   })
 
   if (!user) {
     return NextResponse.json({ error: 'User not found' }, { status: 404 })
   }
 
-  return NextResponse.json({ firstName: user.firstName, lastName: user.lastName })
+  return NextResponse.json({ 
+    firstName: user.firstName, 
+    lastName: user.lastName,
+    username: user.username 
+  })
 }

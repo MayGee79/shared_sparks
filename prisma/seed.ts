@@ -1,5 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client'
-import type { UserType, ProblemStatus } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -12,11 +11,10 @@ async function main() {
   // 2. Create users
   const user1 = await prisma.user.create({
     data: {
-      name: 'User One',
+      firstName: 'User',
+      lastName: 'One',
       email: 'user1@example.com',
       userType: 'PROBLEM_SUBMITTER',
-      // Removed invalid 'role' field
-      // Minimal placeholders
       emailVerified: new Date(),
       hashedPassword: 'placeholder_password_hash'
     }
@@ -24,7 +22,8 @@ async function main() {
 
   const user2 = await prisma.user.create({
     data: {
-      name: 'User Two',
+      firstName: 'User',
+      lastName: 'Two',
       email: 'user2@example.com',
       userType: 'DEVELOPER',
       emailVerified: new Date(),
@@ -34,7 +33,8 @@ async function main() {
 
   const user3 = await prisma.user.create({
     data: {
-      name: 'User Three',
+      firstName: 'User',
+      lastName: 'Three',
       email: 'user3@example.com',
       userType: 'PROBLEM_SUBMITTER',
       emailVerified: new Date(),
@@ -56,7 +56,6 @@ async function main() {
   })
 
   // 4. Create comments
-  //    'Comment' uses 'userId' to reference the user.
   await prisma.comment.createMany({
     data: [
       {
