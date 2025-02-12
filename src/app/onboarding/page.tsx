@@ -250,7 +250,7 @@ export default function Onboarding() {
                     onChange={(e) => setFormData({ ...formData, allowCollaboration: e.target.checked })}
                     className="rounded border-gray-300 text-[#f4b941] focus:ring-[#f4b941]"
                   />
-                  <span className="ml-2 text-sm text-gray-700">I'm open to collaboration requests</span>
+                  <span className="ml-2 text-sm text-gray-700">I&apos;m open to collaboration requests</span>
                 </label>
               </div>
             </div>

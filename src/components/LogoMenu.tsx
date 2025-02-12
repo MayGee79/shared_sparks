@@ -3,11 +3,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useSession } from 'next-auth/react'
 
 export default function LogoMenu() {
   const [isOpen, setIsOpen] = useState(false)
-  const { data: session } = useSession()
 
   return (
     <div className="relative">
@@ -76,4 +74,4 @@ export default function LogoMenu() {
       )}
     </div>
   )
-} 
+}

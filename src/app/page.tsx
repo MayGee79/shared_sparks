@@ -41,7 +41,7 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % slides.length)
     }, 5000)
     return () => clearInterval(timer)
-  }, [])
+  }, [slides.length])
 
   return (
     <main style={{ backgroundColor: '#eef7ff' }} className="min-h-screen p-4 sm:p-6 lg:p-8">
@@ -137,7 +137,7 @@ export default function Home() {
                 </h2>
                 <p className="mt-8 text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                   Shared Sparks is a platform that bridges the gap between unique challenges and creative solutions. 
-                  Whether you're looking for answers to specific problems or ready to innovate, 
+                  Whether you&apos;re looking for answers to specific problems or ready to innovate, 
                   we connect you with a community-driven marketplace of ideas and SaaS solutions.
                 </p>
                 <Link 
@@ -224,7 +224,7 @@ export default function Home() {
               </h2>
               <p className="mt-6 text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 Be part of a global ecosystem where creators and thinkers collaborate to solve real-world problems. 
-                Together, we're shaping the future of SaaS.
+                Together, we&apos;re shaping the future of SaaS.
               </p>
               <Link 
                 href="/register"
@@ -352,3 +352,9 @@ export default function Home() {
     </main>
   )
 }
+
+// Example JSX with unescaped single quotes
+<div>
+  <p>It&apos;s a great day to learn something new.</p>
+  <p>Don&apos;t forget to check the documentation.</p>
+</div>
