@@ -21,7 +21,7 @@ export const authOptions: AuthOptions = {
           where: { email: credentials.email },
         })
 
-        if (user && bcrypt.compareSync(credentials.password, user.hashedPassword)) {
+        if (user && user.hashedPassword && bcrypt.compareSync(credentials.password, user.hashedPassword)) {
           return user
         } else {
           return null
@@ -53,4 +53,4 @@ export const authOptions: AuthOptions = {
   },
 }
 
-export default NextAuth(authOptions)
+export const POST = NextAuth(authOptions)
