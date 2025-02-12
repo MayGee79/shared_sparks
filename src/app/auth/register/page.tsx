@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 
 export default function Register() {
   const [email, setEmail] = useState('')
@@ -25,7 +26,6 @@ export default function Register() {
       })
 
       if (res.ok) {
-        const data = await res.json()
         router.push('/onboarding')
       } else {
         // Handle error
@@ -41,9 +41,11 @@ export default function Register() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="absolute top-4 left-4">
         <Link href="/">
-          <img 
+          <Image 
             src="/logo.png" 
             alt="Shared Sparks" 
+            width={32}
+            height={32}
             className="h-8 w-auto hover:opacity-75 transition-opacity"
           />
         </Link>
@@ -51,9 +53,11 @@ export default function Register() {
 
       <div className="max-w-md w-full space-y-8">
         <div className="flex flex-col items-center">
-          <img 
+          <Image 
             src="/logo.png" 
             alt="Shared Sparks" 
+            width={176}
+            height={176}
             className="h-44 w-auto"
           />
           <h2 className="mt-6 text-center text-3xl font-bold text-[#100359]">

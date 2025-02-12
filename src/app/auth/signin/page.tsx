@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 type LoginFormData = {
   email: string
@@ -35,7 +36,7 @@ export default function SignInPage() {
 
       router.push('/') // Redirect to homepage after successful login
       router.refresh()
-    } catch (err) {
+    } catch {
       setErrorMessage('An error occurred during login')
     }
   }
@@ -58,18 +59,22 @@ export default function SignInPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="absolute top-4 left-4">
         <Link href="/">
-          <img 
+          <Image 
             src="/logo.png" 
             alt="Shared Sparks" 
+            width={32}
+            height={32}
             className="h-8 w-auto hover:opacity-75 transition-opacity"
           />
         </Link>
       </div>
       <div className="max-w-md w-full space-y-8">
         <div className="flex flex-col items-center">
-          <img 
+          <Image 
             src="/logo.png" 
             alt="Shared Sparks" 
+            width={176}
+            height={176}
             className="h-44 w-auto"
           />
           <h2 className="mt-6 text-center text-3xl font-bold text-[#100359]">
