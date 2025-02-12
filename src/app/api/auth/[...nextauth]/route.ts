@@ -1,9 +1,10 @@
-import NextAuth, { AuthOptions, Session, User } from 'next-auth'
+import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import prisma from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { JWT } from 'next-auth/jwt'
+import { AuthOptions, Session, User } from 'next-auth'
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -53,4 +54,7 @@ export const authOptions: AuthOptions = {
   },
 }
 
-export const POST = NextAuth(authOptions)
+export const POST = async (req: Request) => {
+  const response = await NextAuth(authOptions)(req)
+  return response
+}
