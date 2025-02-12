@@ -1,11 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
+
+  useEffect(() => {
+    // Your effect logic
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,20 +23,32 @@ export default function ForgotPassword() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="flex flex-col items-center">
-          <img 
+          <Image 
             src="/logo.png" 
             alt="Shared Sparks" 
+            width={176}
+            height={176}
             className="h-44 w-auto"
           />
           <h2 className="mt-6 text-center text-3xl font-bold text-[#100359]">
             Reset your password
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Enter your email address and we'll send you a link to reset your password.
+            Enter your email address and we&apos;ll send you a link to reset your password.
           </p>
         </div>
 
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          <p className="text-gray-700 mb-6">
+            Shared Sparks isn&apos;t just a platform; it&apos;s a partnership. Together, we can shape the future of SaaS 
+            and redefine how the world solves its most pressing challenges. Whether you&apos;re here to share your 
+            challenges, showcase your solutions, or explore the endless possibilities, Shared Sparks is your 
+            home for innovation.
+          </p>
+          <p>Don&apos;t forget your password!</p>
+          <p>Welcome to the onboarding process. It&apos;s easy!</p>
+          <p>Welcome to our site. It&apos;s great to have you!</p>
+          <Image src="/path/to/image.jpg" alt="Description" width={500} height={500} />
           {!submitted ? (
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>

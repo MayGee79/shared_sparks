@@ -4,12 +4,15 @@ const prismaClientSingleton = () => {
   return new PrismaClient()
 }
 
+// Extend the global object to include the prisma property
 declare global {
-  var prisma: undefined | ReturnType<typeof prismaClientSingleton>
+  // Use let instead of var to avoid ESLint error
+  let prisma: PrismaClient | undefined
 }
 
-export const prisma = globalThis.prisma ?? prismaClientSingleton()
+// Use the global prisma instance if it exists, otherwise create a new one
+export const prisma = global.prisma ?? prismaClientSingleton()
 
-if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma
+if (process.env.NODE_ENV !== 'production') global.prisma = prisma
 
-export default prisma 
+export default prisma

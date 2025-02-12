@@ -110,6 +110,7 @@ export default function ProfilePage() {
     }
   }, [session])
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
@@ -214,6 +215,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#55b7ff]/10 p-8">
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-8">
         <h1 className="text-2xl font-bold text-[#100359] mb-6">Profile Settings</h1>
+        <p>Update your profile. It&apos;s important!</p>
         
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Basic Info Section */}
@@ -444,7 +446,7 @@ export default function ProfilePage() {
                     onChange={(e) => setFormData({ ...formData, allowCollaboration: e.target.checked })}
                     className="rounded border-gray-300 text-[#f4b941] focus:ring-[#f4b941]"
                   />
-                  <span className="ml-2 text-sm text-gray-700">I'm open to collaboration requests</span>
+                  <span className="ml-2 text-sm text-gray-700">I&apos;m open to collaboration requests</span>
                 </label>
               </div>
             </div>

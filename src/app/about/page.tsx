@@ -13,12 +13,12 @@ export default function About() {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h1 className="text-6xl font-bold text-[#100359] mb-12 text-center">About Shared Sparks</h1>          
+          <h1 className="text-6xl font-bold text-[#100359] mb-12 text-center">About Shared Sparks</h1>          
           <div className="flex items-center gap-8 mb-12">
             <div className="flex-1">
               <p className="text-lg text-gray-700">
                 Welcome to Shared Sparks, where ideas ignite innovation and unmet needs spark revolutionary solutions. 
-                We're more than a platform; we're a movement dedicated to connecting people, businesses, and developers 
+                We&apos;re more than a platform; we&apos;re a movement dedicated to connecting people, businesses, and developers 
                 with the tools and community they need to solve real-world problems.
               </p>
             </div>
@@ -39,7 +39,7 @@ export default function About() {
               <p className="text-gray-700">
                 At Shared Sparks, our mission is simple: bridge the gap between unique challenges and creative solutions. 
                 By empowering individuals and businesses to share their obstacles and encouraging developers to transform 
-                them into scalable SaaS solutions, we're fostering a global ecosystem of collaboration and progress.
+                them into scalable SaaS solutions, we&apos;re fostering a global ecosystem of collaboration and progress.
               </p>
             </div>
             <div className="flex-1">
@@ -134,8 +134,8 @@ export default function About() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-[#55b7ff] mb-4">Join the Movement</h2>
             <p className="text-gray-700 mb-6">
-              Shared Sparks isn't just a platform; it's a partnership. Together, we can shape the future of SaaS 
-              and redefine how the world solves its most pressing challenges. Whether you're here to share your 
+              Shared Sparks isn&apos;t just a platform; it&apos;s a partnership. Together, we can shape the future of SaaS 
+              and redefine how the world solves its most pressing challenges. Whether you&apos;re here to share your 
               challenges, showcase your solutions, or explore the endless possibilities, Shared Sparks is your 
               home for innovation.
             </p>
