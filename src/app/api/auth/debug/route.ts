@@ -8,4 +8,4 @@ export async function GET() {
       google: !!process.env.GOOGLE_CLIENT_ID
     }
   })
-} 
+}

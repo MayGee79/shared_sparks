@@ -10,17 +10,18 @@ export async function GET() {
   }
 
   try {
-    const profile = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
         id: true,
-        name: true,
+        firstName: true,
+        lastName: true,
         email: true,
         image: true
       }
     })
 
-    return NextResponse.json(profile)
+    return NextResponse.json(user)
   } catch (error) {
     console.error('Profile fetch error:', error)
     return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 })
@@ -39,9 +40,9 @@ export async function PUT(request: Request) {
     const profile = await prisma.user.update({
       where: { id: session.user.id },
       data: {
-        name: data.fullName,
+        firstName: data.firstName,
+        lastName: data.lastName,
         bio: data.bio,
-        // Removing location since it's not a valid field in the UserUpdateInput type
         industry: data.industry,
         role: data.role,
         expertise: data.expertise,
