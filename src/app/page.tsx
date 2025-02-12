@@ -5,7 +5,7 @@ import LogoMenu from '@/components/LogoMenu'
 import SearchBar from '@/components/SearchBar'
 import { useState, useEffect } from 'react'
 
-export default function Home() {
+export default function HomePage(): JSX.Element {
   const [currentSlide, setCurrentSlide] = useState(0)
 
   const slides = [
