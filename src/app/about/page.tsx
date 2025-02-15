@@ -2,10 +2,11 @@ import Link from 'next/link'
 import Image from 'next/image'
 import LogoMenu from '@/components/LogoMenu'
 import SearchBar from '@/components/SearchBar'
+import '@/styles/about.css'
 
 export default function About() {
   return (
-    <main style={{ backgroundColor: '#eef7ff' }} className="min-h-screen p-4 sm:p-6 lg:p-8">
+    <main className="about-container">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="py-2 px-4 sm:px-6 lg:px-8">
           <LogoMenu />
@@ -13,7 +14,7 @@ export default function About() {
         </div>
 
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <h1 className="text-6xl font-bold text-[#100359] mb-12 text-center">About Shared Sparks</h1>          
+          <h1 className="text-6xl font-bold primary-heading mb-12 text-center">About Shared Sparks</h1>          
           <div className="flex items-center gap-8 mb-12">
             <div className="flex-1">
               <p className="text-lg text-gray-700">
@@ -142,7 +143,8 @@ export default function About() {
             <div className="text-center">
               <Link 
                 href="/auth/register"
-                className="inline-block px-8 py-4 text-white bg-[#6735b1] hover:bg-[#f4b941] rounded-md transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                className="inline-block px-8 py-4 text-white cta-button rounded-md transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                aria-label="Register for Shared Sparks"
               >
                 Ready to spark your next big idea? Join us today!
               </Link>

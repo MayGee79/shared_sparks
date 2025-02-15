@@ -44,7 +44,7 @@ export default function HomePage(): JSX.Element {
   }, [slides.length])
 
   return (
-    <main style={{ backgroundColor: '#eef7ff' }} className="min-h-screen p-4 sm:p-6 lg:p-8">
+    <main className="main-container">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Top Bar */}
         <div className="py-2 px-4 sm:px-6 lg:px-8">
@@ -274,6 +274,8 @@ export default function HomePage(): JSX.Element {
                       onClick={() => setCurrentSlide(index)}
                       className={`w-3 h-3 rounded-full transition-colors
                         ${index === currentSlide ? 'bg-white' : 'bg-white/50'}`}
+                      aria-label={`Go to slide ${index + 1}`}
+                      title={`Slide ${index + 1}`}
                     />
                   ))}
                 </div>

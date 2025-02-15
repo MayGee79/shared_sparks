@@ -1,26 +1,42 @@
+import NextAuth from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+import prisma from '@/lib/prisma'
+
+const handler = NextAuth(authOptions)
+
+// Removed duplicate exports of GET and POST
 
 export async function POST(request: Request) {
-  try {
-    const session = await getServerSession(authOptions)
-    if (!session?.user?.email) {
-      return new NextResponse('Unauthorized', { status: 401 })
-    }
+  const session = await getServerSession()
+  if (!session?.user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
 
-    const json = await request.json()
-    const activity = await prisma.activity.create({
+  const data = await request.json()
+  try {
+    const newActivity = await prisma.activity.create({
       data: {
-        ...json,
-        userEmail: session.user.email,
+        ...data,
+        userId: session.user.id,
       },
     })
-
-    return NextResponse.json(activity)
+    return NextResponse.json(newActivity, { status: 201 })
   } catch (error) {
-    console.error('Error creating activity:', error)
-    return new NextResponse('Error creating activity', { status: 500 })
+    console.error('Activity creation error:', error)
+    return NextResponse.json({ error: 'Failed to create activity' }, { status: 500 })
   }
+}
+
+export async function GET() {
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
+}
+
+export async function PUT() {
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
+}
+
+export async function DELETE() {
+  return NextResponse.json({ error: 'Method not allowed' }, { status: 405 })
 }

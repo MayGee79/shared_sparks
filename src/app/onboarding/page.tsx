@@ -4,6 +4,47 @@ import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { FormField } from '@/components/FormField'
+
+const INDUSTRY_OPTIONS = [
+  { value: '', label: 'Select Industry' },
+  { value: 'technology', label: 'Technology' },
+  { value: 'healthcare', label: 'Healthcare' },
+  { value: 'education', label: 'Education' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'other', label: 'Other' }
+]
+
+const ROLE_OPTIONS = [
+  { value: '', label: 'Select Role' },
+  { value: 'developer', label: 'Developer' },
+  { value: 'entrepreneur', label: 'Entrepreneur' },
+  { value: 'business_owner', label: 'Business Owner' },
+  { value: 'other', label: 'Other' }
+]
+
+const INTERESTS_OPTIONS = [
+  { value: 'ai', label: 'Artificial Intelligence' },
+  { value: 'healthcare', label: 'Healthcare' },
+  { value: 'education', label: 'Education' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'ecommerce', label: 'E-commerce' },
+  { value: 'productivity', label: 'Productivity' }
+]
+
+const GOALS_OPTIONS = [
+  { value: 'find_solutions', label: 'Find SaaS Solutions' },
+  { value: 'develop_ideas', label: 'Develop Ideas' },
+  { value: 'collaborate', label: 'Find Collaborators' },
+  { value: 'market_research', label: 'Market Research' },
+  { value: 'networking', label: 'Professional Networking' }
+]
+
+const VISIBILITY_OPTIONS = [
+  { value: 'public', label: 'Public' },
+  { value: 'private', label: 'Private' },
+  { value: 'connections', label: 'Connections Only' }
+]
 
 export default function Onboarding() {
   const { data: session } = useSession()
@@ -76,25 +117,24 @@ export default function Onboarding() {
           <section>
             <h2 className="text-xl font-semibold text-[#100359] mb-4">Basic Information</h2>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Full Name</label>
-                <input
-                  type="text"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                />
-              </div>
+              <FormField
+                label="Full Name"
+                id="fullName"
+                value={formData.fullName}
+                onChange={(value) => setFormData({ ...formData, fullName: value })}
+                placeholder="Enter your full name"
+                required
+              />
               
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Bio</label>
-                <textarea
-                  value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  rows={4}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                />
-              </div>
+              <FormField
+                label="Bio"
+                id="bio"
+                type="textarea"
+                value={formData.bio}
+                onChange={(value) => setFormData({ ...formData, bio: value })}
+                placeholder="Tell us about yourself"
+                required
+              />
             </div>
           </section>
 
@@ -102,36 +142,25 @@ export default function Onboarding() {
           <section>
             <h2 className="text-xl font-semibold text-[#100359] mb-4">Professional Background</h2>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Industry</label>
-                <select
-                  value={formData.industry}
-                  onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                >
-                  <option value="">Select Industry</option>
-                  <option value="technology">Technology</option>
-                  <option value="healthcare">Healthcare</option>
-                  <option value="education">Education</option>
-                  <option value="finance">Finance</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
+              <FormField
+                label="Industry"
+                id="industry"
+                type="select"
+                value={formData.industry}
+                onChange={(value) => setFormData({ ...formData, industry: value })}
+                options={INDUSTRY_OPTIONS}
+                required
+              />
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Role</label>
-                <select
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                >
-                  <option value="">Select Role</option>
-                  <option value="developer">Developer</option>
-                  <option value="entrepreneur">Entrepreneur</option>
-                  <option value="business_owner">Business Owner</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
+              <FormField
+                label="Role"
+                id="role"
+                type="select"
+                value={formData.role}
+                onChange={(value) => setFormData({ ...formData, role: value })}
+                options={ROLE_OPTIONS}
+                required
+              />
             </div>
           </section>
 
@@ -176,26 +205,16 @@ export default function Onboarding() {
           <section>
             <h2 className="text-xl font-semibold text-[#100359] mb-4">Interests</h2>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Select Your Interests (hold Ctrl/Cmd to select multiple)</label>
-                <select
-                  multiple
-                  size={6}
-                  value={formData.interests}
-                  onChange={(e) => {
-                    const values = Array.from(e.target.selectedOptions, option => option.value);
-                    setFormData({ ...formData, interests: values });
-                  }}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                >
-                  <option value="ai">Artificial Intelligence</option>
-                  <option value="healthcare">Healthcare</option>
-                  <option value="education">Education</option>
-                  <option value="finance">Finance</option>
-                  <option value="ecommerce">E-commerce</option>
-                  <option value="productivity">Productivity</option>
-                </select>
-              </div>
+              <FormField
+                label="Select Your Interests"
+                id="interests"
+                type="select"
+                value={formData.interests}
+                onChange={(values) => setFormData({ ...formData, interests: values })}
+                options={INTERESTS_OPTIONS}
+                multiple
+                size={6}
+              />
             </div>
           </section>
 
@@ -203,25 +222,16 @@ export default function Onboarding() {
           <section>
             <h2 className="text-xl font-semibold text-[#100359] mb-4">Goals</h2>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">What do you want to achieve? (hold Ctrl/Cmd to select multiple)</label>
-                <select
-                  multiple
-                  size={5}
-                  value={formData.goals}
-                  onChange={(e) => {
-                    const values = Array.from(e.target.selectedOptions, option => option.value);
-                    setFormData({ ...formData, goals: values });
-                  }}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                >
-                  <option value="find_solutions">Find SaaS Solutions</option>
-                  <option value="develop_ideas">Develop Ideas</option>
-                  <option value="collaborate">Find Collaborators</option>
-                  <option value="market_research">Market Research</option>
-                  <option value="networking">Professional Networking</option>
-                </select>
-              </div>
+              <FormField
+                label="What do you want to achieve?"
+                id="goals"
+                type="select"
+                value={formData.goals}
+                onChange={(values) => setFormData({ ...formData, goals: values })}
+                options={GOALS_OPTIONS}
+                multiple
+                size={5}
+              />
             </div>
           </section>
 
@@ -229,18 +239,14 @@ export default function Onboarding() {
           <section>
             <h2 className="text-xl font-semibold text-[#100359] mb-4">Privacy Settings</h2>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Profile Visibility</label>
-                <select
-                  value={formData.profileVisibility}
-                  onChange={(e) => setFormData({ ...formData, profileVisibility: e.target.value })}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                >
-                  <option value="public">Public</option>
-                  <option value="private">Private</option>
-                  <option value="connections">Connections Only</option>
-                </select>
-              </div>
+              <FormField
+                label="Profile Visibility"
+                id="profileVisibility"
+                type="select"
+                value={formData.profileVisibility}
+                onChange={(value) => setFormData({ ...formData, profileVisibility: value })}
+                options={VISIBILITY_OPTIONS}
+              />
               
               <div>
                 <label className="flex items-center">
@@ -252,6 +258,46 @@ export default function Onboarding() {
                   />
                   <span className="ml-2 text-sm text-gray-700">I&apos;m open to collaboration requests</span>
                 </label>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-[#100359] mb-4">User Information</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">User Type</label>
+                <select
+                  id="userType"
+                  name="userType"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  aria-label="Select user type"
+                  title="User type"
+                >
+                  {/* options */}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  aria-label="First name"
+                  placeholder="Enter your first name"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  aria-label="Last name"
+                  placeholder="Enter your last name"
+                />
               </div>
             </div>
           </section>
