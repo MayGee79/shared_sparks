@@ -1,9 +1,9 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import AuthProvider from '@/components/providers/AuthProvider'
-
-const inter = Inter({ subsets: ['latin'] })
+// Remove font import that's causing issues
+// import { Inter } from 'next/font/google'
+// Remove or create the Providers component
+// import Providers from '@/components/Providers'
 
 export const metadata: Metadata = {
   title: 'Shared Sparks',
@@ -24,10 +24,12 @@ export default function RootLayout({
           type="image/x-icon"
         />
       </head>
-      <body className={inter.className}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+      <body style={{ 
+        fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif',
+        margin: 0,
+        padding: 0
+      }}>
+        {children}
       </body>
     </html>
   )

@@ -23,11 +23,24 @@ export function FormField({
   placeholder,
   required
 }: FormFieldProps) {
-  const baseClasses = "mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+  const baseStyles = {
+    marginTop: '0.25rem',
+    display: 'block',
+    width: '100%',
+    borderRadius: '0.375rem',
+    border: '1px solid #d1d5db',
+    padding: '0.5rem 0.75rem'
+  }
 
   return (
-    <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+    <div style={{ marginBottom: '1rem' }}>
+      <label htmlFor={id} style={{ 
+        display: 'block', 
+        fontSize: '0.875rem', 
+        fontWeight: '500', 
+        color: '#374151',
+        marginBottom: '0.25rem'
+      }}>
         {label}
       </label>
       
@@ -36,7 +49,7 @@ export function FormField({
           id={id}
           value={value as string}
           onChange={(e) => onChange(e.target.value)}
-          className={baseClasses}
+          style={baseStyles}
           rows={4}
           aria-label={label}
           placeholder={placeholder}
@@ -54,7 +67,7 @@ export function FormField({
               onChange(e.target.value);
             }
           }}
-          className={baseClasses}
+          style={baseStyles}
           multiple={multiple}
           size={size}
           aria-label={label}
@@ -72,7 +85,7 @@ export function FormField({
           id={id}
           value={value as string}
           onChange={(e) => onChange(e.target.value)}
-          className={baseClasses}
+          style={baseStyles}
           aria-label={label}
           placeholder={placeholder}
           required={required}

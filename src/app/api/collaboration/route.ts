@@ -1,16 +1,15 @@
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { PrismaClient } from '@prisma/client'
-import { authOptions } from '@/lib/auth'
-
-// Create a single PrismaClient instance
-const prisma = new PrismaClient()
+import prisma from '@/lib/prisma'  // Use shared Prisma instance
+import { authOptions } from '@/lib/auth/handlers'
+import { logger } from '@/lib/logger'
 
 // Type-safe request handler
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
+      logger.auth('Unauthorized access attempt')
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
@@ -19,6 +18,7 @@ export async function GET() {
     })
 
     if (!user) {
+      logger.error('User not found', { email: session.user.email })
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
@@ -36,7 +36,7 @@ export async function GET() {
 
     return NextResponse.json(requests)
   } catch (error) {
-    console.error('Error creating collaboration request:', error)
+    logger.error('Collaboration request error:', { error })
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }
@@ -74,3 +74,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }
+
+export const dynamic = 'force-dynamic';

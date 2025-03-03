@@ -1,16 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { useState } from 'react'
+import { LinkWrapper } from '@/components/LinkWrapper'
+import { ImageWrapper } from '@/components/ImageWrapper'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
   const [submitted, setSubmitted] = useState(false)
-
-  useEffect(() => {
-    // Your effect logic
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -23,7 +19,7 @@ export default function ForgotPassword() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="flex flex-col items-center">
-          <Image 
+          <ImageWrapper 
             src="/logo.png" 
             alt="Shared Sparks" 
             width={176}
@@ -41,14 +37,19 @@ export default function ForgotPassword() {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <p className="text-gray-700 mb-6">
             Shared Sparks isn&apos;t just a platform; it&apos;s a partnership. Together, we can shape the future of SaaS 
-            and redefine how the world solves its most pressing challenges. Whether you&apos;re here to share your 
-            challenges, showcase your solutions, or explore the endless possibilities, Shared Sparks is your 
-            home for innovation.
+            and redefine how the world solves its most pressing challenges.
           </p>
-          <p>Don&apos;t forget your password!</p>
-          <p>Welcome to the onboarding process. It&apos;s easy!</p>
-          <p>Welcome to our site. It&apos;s great to have you!</p>
-          <Image src="/path/to/image.jpg" alt="Description" width={500} height={500} />
+          <p className="mb-4">Don&apos;t forget your password!</p>
+          
+          {/* Use ImageWrapper instead of Image */}
+          <ImageWrapper 
+            src="/path/to/image.jpg" 
+            alt="Description" 
+            width={500} 
+            height={500}
+            className="w-full rounded-lg mb-6" 
+          />
+
           {!submitted ? (
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
@@ -83,24 +84,24 @@ export default function ForgotPassword() {
               <div className="text-sm text-gray-600">
                 If an account exists for {email}, you will receive a password reset link in your email.
               </div>
-              <Link 
+              <LinkWrapper 
                 href="/auth/login"
                 className="mt-6 inline-block font-medium text-[#55b7ff] hover:text-[#f4b941]"
               >
                 Return to login
-              </Link>
+              </LinkWrapper>
             </div>
           )}
 
           <div className="mt-6">
             <div className="relative">
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Remember your password?{' '}
-                  <Link href="/auth/login" className="font-medium text-[#55b7ff] hover:text-[#f4b941]">
-                    Sign in
-                  </Link>
-                </span>
+                <LinkWrapper 
+                  href="/auth/login"
+                  className="font-medium text-[#55b7ff] hover:text-[#f4b941]"
+                >
+                  Sign in
+                </LinkWrapper>
               </div>
             </div>
           </div>

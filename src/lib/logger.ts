@@ -1,6 +1,19 @@
+const isDev = process.env.NODE_ENV === 'development'
+
 export const logger = {
-  error: (message: string, meta?: object) => console.error(message, meta),
-  warn: (message: string, meta?: object) => console.warn(message, meta),
-  info: (message: string, meta?: object) => console.info(message, meta),
-  debug: (message: string, meta?: object) => console.debug(message, meta)
+  error: (message: string, meta?: object) => {
+    console.error('[ERROR]', message, meta ? JSON.stringify(meta, null, 2) : '')
+  },
+  warn: (message: string, meta?: object) => {
+    console.warn('[WARN]', message, meta ? JSON.stringify(meta, null, 2) : '')
+  },
+  info: (message: string, meta?: object) => {
+    if (isDev) console.info('[INFO]', message, meta ? JSON.stringify(meta, null, 2) : '')
+  },
+  debug: (message: string, meta?: object) => {
+    if (isDev) console.debug('[DEBUG]', message, meta ? JSON.stringify(meta, null, 2) : '')
+  },
+  auth: (message: string, meta?: object) => {
+    if (isDev) console.log('[AUTH]', message, meta ? JSON.stringify(meta, null, 2) : '')
+  }
 }

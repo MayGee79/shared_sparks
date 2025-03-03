@@ -1,0 +1,10 @@
+:root {
+  /* Primary Colors */
+  --primary: #2d3448;      /* Deep Navy Blue */
+  --accent: #c7aa88;       /* Muted Gold/Beige */
+  --background: #f2f0e9;   /* Very light cream/off-white */
+
+  /* Hero Section */
+  --hero-bg: #2d3448;
+  --hero-text: #ffffff;
+} 

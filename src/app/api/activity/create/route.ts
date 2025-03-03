@@ -1,31 +1,50 @@
-import NextAuth from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import { NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import NextAuth, { getServerSession } from 'next-auth'
+import { authOptions } from "@/lib/auth/handlers"  // Updated import path
 import prisma from '@/lib/prisma'
+import { z } from 'zod'
 
 const handler = NextAuth(authOptions)
+
+// Activity input validation schema
+const activitySchema = z.object({
+  title: z.string(),
+  content: z.string().optional(),
+})
 
 // Removed duplicate exports of GET and POST
 
 export async function POST(request: Request) {
-  const session = await getServerSession()
-  if (!session?.user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  const data = await request.json()
   try {
+    // Auth check
+    const session = await getServerSession(authOptions)
+    if (!session?.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Validate input
+    const data = await request.json()
+    const validatedData = activitySchema.parse(data)
+
+    // Create activity with proper relation
     const newActivity = await prisma.activity.create({
       data: {
-        ...data,
-        userId: session.user.id,
+        ...validatedData,
+        user: {
+          connect: {
+            id: session.user.id,
+          }
+        },
       },
     })
+
     return NextResponse.json(newActivity, { status: 201 })
   } catch (error) {
     console.error('Activity creation error:', error)
-    return NextResponse.json({ error: 'Failed to create activity' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Failed to create activity' },
+      { status: 500 }
+    )
   }
 }
 

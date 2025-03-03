@@ -1,10 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+// Note: Using standard HTML img tags instead of Next.js Image components
+// due to type compatibility issues in Next.js 14.2.24 with server components.
+// TODO: Revisit when upgrading Next.js or when the issue is resolved.
+
+export const dynamic = 'force-dynamic'
+import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
 import { FormField } from '@/components/FormField'
+import { default as nextDynamic } from 'next/dynamic'
+
+const AuthComponent = nextDynamic(
+  () => import('@/app/components/AuthComponent'),
+  { ssr: false } // Disable server-side rendering
+)
 
 const INDUSTRY_OPTIONS = [
   { value: '', label: 'Select Industry' },
@@ -47,11 +57,15 @@ const VISIBILITY_OPTIONS = [
 ]
 
 export default function Onboarding() {
-  const { data: session } = useSession()
   const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
+  const [sessionData, setSessionData] = useState<any>(null)
+  const [sessionStatus, setSessionStatus] = useState('loading')
+  
+  // Initial form data state
   const [formData, setFormData] = useState({
-    // Basic Info
-    fullName: session?.user?.name || '',
+    firstName: '',
+    lastName: '',
     bio: '',
     company: '',
     location: '',
@@ -81,6 +95,42 @@ export default function Onboarding() {
     }
   })
 
+  // Safely try to access session during initial render
+  try {
+    // This may fail during SSR - we'll handle it in useEffect
+    const { data, status } = useSession()
+    if (status !== 'loading') {
+      setSessionStatus(status)
+      setSessionData(data)
+    }
+  } catch (e) {
+    console.error('Error accessing session during initial render:', e)
+  }
+
+  // Use effect to safely get session data on the client side
+  useEffect(() => {
+    try {
+      const { data, status } = useSession()
+      setSessionStatus(status)
+      setSessionData(data)
+      
+      // Update form data with session data
+      if (status === 'authenticated' && data?.user?.name) {
+        const nameParts = data.user.name.split(' ')
+        setFormData(prevData => ({
+          ...prevData,
+          firstName: nameParts[0] || '',
+          lastName: nameParts.slice(1).join(' ') || '',
+        }))
+      }
+      
+      setIsLoading(false)
+    } catch (e) {
+      console.error('Error accessing session in useEffect:', e)
+      setIsLoading(false)
+    }
+  }, [])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
@@ -98,34 +148,125 @@ export default function Onboarding() {
     }
   }
 
+  if (isLoading) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        backgroundColor: 'rgba(85, 183, 255, 0.1)',
+        padding: '2rem', 
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Loading...</h2>
+        </div>
+      </div>
+    )
+  }
+
+  if (sessionStatus === 'unauthenticated' || !sessionData) {
+    return (
+      <div style={{ 
+        minHeight: '100vh', 
+        backgroundColor: 'rgba(85, 183, 255, 0.1)',
+        padding: '2rem',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+            Please log in to continue onboarding.
+          </h2>
+          <a 
+            href="/auth/signin" 
+            style={{ 
+              display: 'inline-block',
+              padding: '0.5rem 1rem',
+              backgroundColor: '#4299e1',
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '0.25rem',
+              fontWeight: 'bold'
+            }}
+          >
+            Sign In
+          </a>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-[#55b7ff]/10 p-8">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-8">
-        <div className="flex flex-col items-center mb-8">
-          <Image 
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: 'rgba(85, 183, 255, 0.1)',
+      padding: '2rem'
+    }}>
+      <div style={{ 
+        maxWidth: '600px', 
+        margin: '0 auto', 
+        backgroundColor: 'white', 
+        borderRadius: '0.5rem', 
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+        padding: '2rem'
+      }}>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          marginBottom: '2rem'
+        }}>
+          <img 
             src="/logo.png" 
             alt="Shared Sparks" 
             width={176}
             height={176}
-            className="h-44 w-auto"
+            style={{ height: '11rem', width: 'auto' }}
           />
-          <h2 className="mt-6 text-3xl font-bold text-[#100359]">Complete Your Profile</h2>
+          <h2 style={{ 
+            marginTop: '1.5rem', 
+            fontSize: '1.875rem', 
+            fontWeight: 'bold', 
+            color: '#100359' 
+          }}>
+            Complete Your Profile
+          </h2>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} style={{ marginTop: '2rem' }}>
           {/* Basic Info Section */}
-          <section>
-            <h2 className="text-xl font-semibold text-[#100359] mb-4">Basic Information</h2>
-            <div className="space-y-4">
+          <section style={{ marginBottom: '2rem' }}>
+            <h2 style={{ 
+              fontSize: '1.25rem', 
+              fontWeight: '600', 
+              color: '#100359', 
+              marginBottom: '1rem' 
+            }}>
+              Basic Information
+            </h2>
+            <div style={{ marginBottom: '1rem' }}>
               <FormField
-                label="Full Name"
-                id="fullName"
-                value={formData.fullName}
-                onChange={(value) => setFormData({ ...formData, fullName: value })}
-                placeholder="Enter your full name"
+                label="First Name"
+                id="firstName"
+                type="text"
+                value={formData.firstName}
+                onChange={(value) => setFormData({ ...formData, firstName: value })}
+                placeholder="Enter your first name"
                 required
               />
               
+              <FormField
+                label="Last Name"
+                id="lastName"
+                type="text"
+                value={formData.lastName}
+                onChange={(value) => setFormData({ ...formData, lastName: value })}
+                placeholder="Enter your last name"
+                required
+              />
+
               <FormField
                 label="Bio"
                 id="bio"
@@ -139,9 +280,16 @@ export default function Onboarding() {
           </section>
 
           {/* Professional Background Section */}
-          <section>
-            <h2 className="text-xl font-semibold text-[#100359] mb-4">Professional Background</h2>
-            <div className="space-y-4">
+          <section style={{ marginBottom: '2rem' }}>
+            <h2 style={{ 
+              fontSize: '1.25rem', 
+              fontWeight: '600', 
+              color: '#100359', 
+              marginBottom: '1rem' 
+            }}>
+              Professional Background
+            </h2>
+            <div style={{ marginBottom: '1rem' }}>
               <FormField
                 label="Industry"
                 id="industry"
@@ -165,36 +313,88 @@ export default function Onboarding() {
           </section>
 
           {/* Social Media Links */}
-          <section>
-            <h2 className="text-xl font-semibold text-[#100359] mb-4">Social Media Links</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">LinkedIn</label>
+          <section style={{ marginBottom: '2rem' }}>
+            <h2 style={{ 
+              fontSize: '1.25rem', 
+              fontWeight: '600', 
+              color: '#100359', 
+              marginBottom: '1rem' 
+            }}>
+              Social Media Links
+            </h2>
+            <div style={{ marginBottom: '1rem' }}>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: '0.875rem', 
+                  fontWeight: '500', 
+                  color: '#4b5563', 
+                  marginBottom: '0.25rem' 
+                }}>
+                  LinkedIn
+                </label>
                 <input
                   type="url"
                   value={formData.linkedin}
                   onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  style={{ 
+                    marginTop: '0.25rem', 
+                    display: 'block', 
+                    width: '100%', 
+                    borderRadius: '0.375rem', 
+                    border: '1px solid #d1d5db', 
+                    padding: '0.5rem 0.75rem' 
+                  }}
                   placeholder="https://linkedin.com/in/username"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">GitHub</label>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: '0.875rem', 
+                  fontWeight: '500', 
+                  color: '#4b5563', 
+                  marginBottom: '0.25rem' 
+                }}>
+                  GitHub
+                </label>
                 <input
                   type="url"
                   value={formData.github}
                   onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  style={{ 
+                    marginTop: '0.25rem', 
+                    display: 'block', 
+                    width: '100%', 
+                    borderRadius: '0.375rem', 
+                    border: '1px solid #d1d5db', 
+                    padding: '0.5rem 0.75rem' 
+                  }}
                   placeholder="https://github.com/username"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Twitter</label>
+              <div style={{ marginBottom: '1rem' }}>
+                <label style={{ 
+                  display: 'block', 
+                  fontSize: '0.875rem', 
+                  fontWeight: '500', 
+                  color: '#4b5563', 
+                  marginBottom: '0.25rem' 
+                }}>
+                  Twitter
+                </label>
                 <input
                   type="url"
                   value={formData.twitter}
                   onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+                  style={{ 
+                    marginTop: '0.25rem', 
+                    display: 'block', 
+                    width: '100%', 
+                    borderRadius: '0.375rem', 
+                    border: '1px solid #d1d5db', 
+                    padding: '0.5rem 0.75rem' 
+                  }}
                   placeholder="https://twitter.com/username"
                 />
               </div>
@@ -202,9 +402,16 @@ export default function Onboarding() {
           </section>
 
           {/* Interest Tags */}
-          <section>
-            <h2 className="text-xl font-semibold text-[#100359] mb-4">Interests</h2>
-            <div className="space-y-4">
+          <section style={{ marginBottom: '2rem' }}>
+            <h2 style={{ 
+              fontSize: '1.25rem', 
+              fontWeight: '600', 
+              color: '#100359', 
+              marginBottom: '1rem' 
+            }}>
+              Interests
+            </h2>
+            <div style={{ marginBottom: '1rem' }}>
               <FormField
                 label="Select Your Interests"
                 id="interests"
@@ -218,95 +425,22 @@ export default function Onboarding() {
             </div>
           </section>
 
-          {/* Goals */}
-          <section>
-            <h2 className="text-xl font-semibold text-[#100359] mb-4">Goals</h2>
-            <div className="space-y-4">
-              <FormField
-                label="What do you want to achieve?"
-                id="goals"
-                type="select"
-                value={formData.goals}
-                onChange={(values) => setFormData({ ...formData, goals: values })}
-                options={GOALS_OPTIONS}
-                multiple
-                size={5}
-              />
-            </div>
-          </section>
-
-          {/* Privacy Settings */}
-          <section>
-            <h2 className="text-xl font-semibold text-[#100359] mb-4">Privacy Settings</h2>
-            <div className="space-y-4">
-              <FormField
-                label="Profile Visibility"
-                id="profileVisibility"
-                type="select"
-                value={formData.profileVisibility}
-                onChange={(value) => setFormData({ ...formData, profileVisibility: value })}
-                options={VISIBILITY_OPTIONS}
-              />
-              
-              <div>
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={formData.allowCollaboration}
-                    onChange={(e) => setFormData({ ...formData, allowCollaboration: e.target.checked })}
-                    className="rounded border-gray-300 text-[#f4b941] focus:ring-[#f4b941]"
-                  />
-                  <span className="ml-2 text-sm text-gray-700">I&apos;m open to collaboration requests</span>
-                </label>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold text-[#100359] mb-4">User Information</h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">User Type</label>
-                <select
-                  id="userType"
-                  name="userType"
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                  aria-label="Select user type"
-                  title="User type"
-                >
-                  {/* options */}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">First Name</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                  aria-label="First name"
-                  placeholder="Enter your first name"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Last Name</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                  aria-label="Last name"
-                  placeholder="Enter your last name"
-                />
-              </div>
-            </div>
-          </section>
-
-          <button
-            type="submit"
-            className="w-full bg-[#f4b941] text-[#100359] py-2 rounded-md font-bold hover:bg-[#f4b941]/90"
+          {/* Submit Button */}
+          <button 
+            type="submit" 
+            style={{
+              width: '100%',
+              padding: '0.75rem',
+              backgroundColor: '#55b7ff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.375rem',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s ease-in-out'
+            }}
           >
-            Complete Profile
+            Save Profile
           </button>
         </form>
       </div>

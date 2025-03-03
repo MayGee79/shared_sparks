@@ -1,40 +1,18 @@
-import NextAuth from "next-auth"
-import { PrismaClient } from "@prisma/client"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
-import prisma from "@/lib/prisma"
-import { authOptions as baseAuthOptions } from "@/lib/auth"
+import NextAuth, { User } from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+// To use Prisma adapter, uncomment the imports below and configure your prisma client accordingly
+// import { PrismaAdapter } from '@next-auth/prisma-adapter'
+// import { prisma } from '@/lib/prisma'
+import { authOptions } from '@/lib/auth/handlers'
 
-// Define the shape of the user object expected by createUser
-interface CreateUserInput {
-  firstName?: string;
-  lastName?: string;
-  name?: string | null;
-  email?: string;
-  // add additional properties if needed
+// Define a custom user type that extends the NextAuth User type
+interface CustomUser extends User {
+  userType: string;
+  role: string;
+  firstName: string;
+  lastName: string;
 }
 
-// Type the 'prisma' parameter explicitly with PrismaClient
-const CustomPrismaAdapter = (prismaClient: PrismaClient) => {
-  const defaultAdapter = PrismaAdapter(prismaClient)
-  return {
-    ...defaultAdapter,
-    async createUser(user: CreateUserInput) {
-      let { name, ...rest } = user
-      if (name) {
-        const [firstName, ...lastNameParts] = name.split(" ")
-        const lastName = lastNameParts.join(" ") || ""
-        user = { ...rest, firstName, lastName }
-      }
-      return defaultAdapter.createUser(user)
-    },
-  }
-}
-
-const authOptions = {
-  ...baseAuthOptions,
-  adapter: CustomPrismaAdapter(prisma),
-}
-
+// Create and export the handler, not the options
 const handler = NextAuth(authOptions)
-
 export { handler as GET, handler as POST }

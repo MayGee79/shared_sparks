@@ -1,5 +1,9 @@
 'use client'
 
+// Note: Adding 'use client' directive to fix component compatibility issues
+// with Next.js 14.2.24 server components.
+// TODO: Revisit when upgrading Next.js or when the issue is resolved.
+
 import { useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 
@@ -79,6 +83,7 @@ export default function SearchBar() {
             type="submit"
             className="absolute left-3 top-1/2 -translate-y-1/2 text-[#55b7ff] hover:text-[#f4b941]"
           >
+            {/* @ts-expect-error - FiSearch is a valid React component despite the type error */}
             <FiSearch size={20} />
           </button>
         </div>

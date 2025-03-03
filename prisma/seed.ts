@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, UserType } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -14,7 +14,7 @@ async function main() {
       firstName: 'User',
       lastName: 'One',
       email: 'user1@example.com',
-      userType: 'PROBLEM_SUBMITTER',
+      userType: UserType.PROBLEM_SUBMITTER, // Use enum value directly
       emailVerified: new Date(),
       hashedPassword: 'placeholder_password_hash'
     }
@@ -25,7 +25,7 @@ async function main() {
       firstName: 'User',
       lastName: 'Two',
       email: 'user2@example.com',
-      userType: 'DEVELOPER',
+      userType: UserType.PROBLEM_SOLVER, // Corrected enum value
       emailVerified: new Date(),
       hashedPassword: 'placeholder_password_hash'
     }
@@ -36,7 +36,7 @@ async function main() {
       firstName: 'User',
       lastName: 'Three',
       email: 'user3@example.com',
-      userType: 'PROBLEM_SUBMITTER',
+      userType: UserType.PROBLEM_SUBMITTER,
       emailVerified: new Date(),
       hashedPassword: 'placeholder_password_hash'
     }

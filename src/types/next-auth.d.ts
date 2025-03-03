@@ -1,116 +1,54 @@
-import NextAuth, { DefaultSession } from 'next-auth';
-import "next-auth";
+import "next-auth"
+import NextAuth from "next-auth"
+import { User } from "@prisma/client";
+import { DefaultSession } from "next-auth";
 
-declare module 'next-auth' {
+// Define SafeUser first before using it
+export type SafeUser = Omit<
+  User,
+  "hashedPassword" | "createdAt" | "updatedAt" | "emailVerified"
+>;
+
+declare module "next-auth" {
+  /**
+   * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
   interface Session {
-    user: {
-      id: string;
-      email: string;
-      name?: string | null;
-      image?: string | null;
-    } & DefaultSession['user'];
+    user: SafeUser & DefaultSession["user"];
     accessToken?: string;
   }
 
+  /**
+   * The shape of the user object returned in the OAuth providers' `profile` callback,
+   * or the second parameter of the `session` callback, when using a database.
+   */
   interface User {
-    id: string;
-    email: string;
-    hashedPassword?: string;
-    name?: string | null;
+    id: string
+    name?: string | null
+    email?: string | null
+    image?: string | null
+    emailVerified?: Date | null
+    userType?: string
+    role?: string
+    firstName?: string | null
+    lastName?: string | null
+    username?: string | null
+    bio?: string | null
+    linkedin?: string | null
+    github?: string | null
+    twitter?: string | null
   }
 }
 
-export const authOptions: AuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
-      },
-      authorize: async (credentials) => {
-        if (!credentials || !credentials.email || !credentials.password) {
-          return null;
-        }
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-        if (user && user.hashedPassword && bcrypt.compareSync(credentials.password, user.hashedPassword)) {
-          // Omit the hashedPassword property before returning
-          const { hashedPassword, ...safeUser } = user;
-          // Optionally cast to User so that it satisfies NextAuth:
-          return safeUser as unknown as User;
-        } else {
-          return null;
-        }
-      },
-    }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          scope: 'openid email profile',
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code"
-        }
-      }
-    }),
-  ],
-  adapter: PrismaAdapter(prisma),
-  pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error',
-    verifyRequest: '/auth/verify-request',
-    newUser: '/onboarding',
-  },
-  debug: true,
-  secret: process.env.NEXTAUTH_SECRET!,  // use non-null assertion if you're sure it's provided
-  session: { strategy: "jwt" },
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      if (url.includes('/onboarding')) return url;
-      if (url === baseUrl) return `${baseUrl}/dashboard`;
-      if (url.startsWith(baseUrl)) return url;
-      return baseUrl;
-    },
-    async session({ session, token }: { session: Session; token: JWT }) {
-      console.log('Session callback:', { session, token });
-      if (session.user) {
-        session.user.id = token.sub!;
-      }
-      session.accessToken = token.accessToken as string;
-      return session;
-    },
-    async jwt({ token, user, account }: { token: JWT; user?: User; account?: Account }) {
-      console.log('JWT callback:', { token, user, account });
-      if (account) {
-        token.accessToken = account.access_token;
-        token.refreshToken = account.refresh_token;
-        token.accessTokenExpires = account.expires_at ? account.expires_at * 1000 : Date.now() + 3600 * 1000;
-        return token;
-      }
-      if (typeof token.accessTokenExpires === 'number' && Date.now() > token.accessTokenExpires) {
-        console.log('Access token has expired, refreshing...');
-        return refreshAccessToken(token);
-      }
-      return token;
-    },
-    async signIn({ user, account }) {
-      if (!user?.email) return false;
-      const existingUser = await prisma.user.findUnique({
-        where: { email: user.email }
-      });
-      if (existingUser && account?.type === 'oauth') {
-        return '/auth/existing-user';
-      }
-      return true;
-    }
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string
+    userType?: string
+    role?: string
+    firstName?: string
+    lastName?: string
+    accessToken?: string;
+    refreshToken?: string;
+    accessTokenExpires?: number;
   }
-};
+}
