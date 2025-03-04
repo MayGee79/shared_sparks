@@ -64,9 +64,9 @@ export default function SearchBar() {
   }
 
   return (
-    <div className="relative">
-      <form onSubmit={handleSearch} className="w-full max-w-2xl mx-auto">
-        <div className="relative">
+    <div style={{ position: 'relative' }}>
+      <form onSubmit={handleSearch} style={{ width: '100%', maxWidth: '42rem', margin: '0 auto' }}>
+        <div style={{ position: 'relative' }}>
           <input
             type="text"
             value={searchTerm}
@@ -77,13 +77,41 @@ export default function SearchBar() {
               }
             }}
             placeholder="Search site content..."
-            className="w-full px-4 py-3 pl-12 rounded-lg border-2 border-[#55b7ff] focus:border-[#f4b941] focus:outline-none transition-colors"
+            style={{ 
+              width: '100%', 
+              padding: '0.75rem', 
+              paddingLeft: '3rem', 
+              borderRadius: '0.5rem', 
+              border: '2px solid #55b7ff', 
+              transition: 'border-color 0.2s ease-in-out',
+              outline: 'none'
+            }}
+            onFocus={(e) => {
+              e.target.style.borderColor = '#f4b941';
+            }}
+            onBlur={(e) => {
+              e.target.style.borderColor = '#55b7ff';
+            }}
           />
           <button 
             type="submit"
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#55b7ff] hover:text-[#f4b941]"
+            style={{ 
+              position: 'absolute', 
+              left: '0.75rem', 
+              top: '50%', 
+              transform: 'translateY(-50%)',
+              color: '#55b7ff',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#f4b941';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = '#55b7ff';
+            }}
           >
-            {/* @ts-expect-error - FiSearch is a valid React component despite the type error */}
             <FiSearch size={20} />
           </button>
         </div>
@@ -91,15 +119,38 @@ export default function SearchBar() {
 
       {/* Search Results Dropdown */}
       {showResults && results.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto z-50">
+        <div style={{ 
+          position: 'absolute', 
+          top: '100%', 
+          left: 0, 
+          right: 0,
+          marginTop: '0.5rem',
+          background: 'white',
+          borderRadius: '0.5rem',
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+          border: '1px solid #e5e7eb',
+          maxHeight: '24rem',
+          overflowY: 'auto',
+          zIndex: 50
+        }}>
           {results.map((result, index) => (
             <a
               key={index}
               href={result.path}
-              className="block px-4 py-3 hover:bg-[#f4b941]/10 border-b last:border-b-0"
+              style={{ 
+                display: 'block', 
+                padding: '0.75rem 1rem', 
+                borderBottom: index === results.length - 1 ? 'none' : '1px solid #e5e7eb'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(244, 185, 65, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
             >
-              <h3 className="font-semibold text-[#100359]">{result.title}</h3>
-              <p className="text-sm text-gray-600 mt-1">
+              <h3 style={{ fontWeight: 'bold', color: '#100359' }}>{result.title}</h3>
+              <p style={{ fontSize: '0.875rem', color: '#4b5563', marginTop: '0.25rem' }}>
                 {result.content[0].substring(0, 100)}...
               </p>
             </a>
