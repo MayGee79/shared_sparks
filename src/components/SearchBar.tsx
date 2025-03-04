@@ -87,10 +87,10 @@ export default function SearchBar() {
               outline: 'none'
             }}
             onFocus={(e) => {
-              e.target.style.borderColor = '#f4b941';
+              e.currentTarget.style.borderColor = '#f4b941';
             }}
             onBlur={(e) => {
-              e.target.style.borderColor = '#55b7ff';
+              e.currentTarget.style.borderColor = '#55b7ff';
             }}
           />
           <button 
