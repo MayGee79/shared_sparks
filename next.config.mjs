@@ -11,6 +11,8 @@ const nextConfig = {
     disableOptimizedLoading: true
   },
   images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
@@ -23,24 +25,6 @@ const nextConfig = {
         pathname: '/**',
       }
     ]
-  },
-  webpack: (config) => {
-    config.module.rules.push({
-      test: /\.css$/,
-      use: [
-        'style-loader',
-        'css-loader',
-        {
-          loader: 'postcss-loader',
-          options: {
-            postcssOptions: {
-              plugins: ['tailwindcss', 'autoprefixer']
-            }
-          }
-        }
-      ]
-    });
-    return config;
   }
 };
 

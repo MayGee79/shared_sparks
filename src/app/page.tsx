@@ -8,7 +8,6 @@ import Image from 'next/image'
 import LogoMenu from '@/components/LogoMenu'
 import SearchBar from '@/components/SearchBar'
 import { useState, useEffect } from 'react'
-import DropdownMenu from '@/components/DropdownMenu'
 // import HeroSection from '@/components/HeroSection' - Component not found
 // Using local component instead
 // import FeaturesSection from '@/components/FeaturesSection' - Conflicts with local declaration
@@ -19,6 +18,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import HeroSection from '@/components/HeroSection'
 import { FeaturesSection } from '@/components/FeaturesSection'
 import CTASection from '@/components/CTASection'
+import Footer from '@/components/Footer'
 // HeroSection is already imported in the component
 // import HeroSection from '@/components/HeroSection'
 // Removing FeaturesSection import as it conflicts with local declaration
@@ -26,51 +26,79 @@ import CTASection from '@/components/CTASection'
 // import HeroSection from '@/components/HeroSection'
 // Removing FeaturesSection import as it conflicts with local declaration
 
-const showcases = [
-  { id: 1, title: 'Project Alpha', description: 'Revolutionary CRM solution.' },
-  { id: 2, title: 'Project Beta', description: 'Next-gen project management tool.' },
-  { id: 3, title: 'Project Gamma', description: 'Innovative collaboration platform.' }
-]
-
+// Our feature cards for the "How It Works" section
 const features = [
   {
-    title: 'Innovative Ideas',
-    description: 'Submit and collaborate on cutting-edge SaaS solutions.',
-    icon: '💡'
+    title: 'Search for Solutions',
+    description: 'Dive into our curated directory of top SaaS tools designed to solve real problems. Find the software that fits your needs without the hassle.',
+    imagePath: '/feature-analytics.png',
+    buttonText: 'Learn More',
+    buttonLink: '/how-it-works'
   },
   {
-    title: 'Seamless Collaboration',
-    description: 'Connect with industry experts and developers.',
-    icon: '🤝'
+    title: 'Share Your Challenge',
+    description: 'Can\'t find the perfect solution? Let us know about your unique challenge. We spotlight unmet needs, turning everyday issues into opportunities for breakthrough innovation.',
+    imagePath: '/feature-saas.png',
+    buttonText: 'View Solutions',
+    buttonLink: '/solutions'
   },
   {
-    title: 'Instant Feedback',
-    description: 'Get votes and comments from the community.',
-    icon: '⚡'
+    title: 'Connect and Ignite Ideas',
+    description: 'Join a vibrant community where business owners, developers, and entrepreneurs exchange insights. Spark discussions that transform challenges into actionable ideas and fuel next-level innovation.',
+    imagePath: '/feature-choice.png',
+    buttonText: 'Our Advantage',
+    buttonLink: '/why-us'
+  },
+  {
+    title: 'Promote and Scale',
+    description: 'For developers, it\'s a launchpad to success. Showcase your established tools or debut new products to a targeted audience eager for smart, market-ready solutions that drive real business growth.',
+    imagePath: '/feature-community.png',
+    buttonText: 'Get Started',
+    buttonLink: '/register'
   }
-]
+];
+
+// Showcase projects
+const showcases = [
+  { 
+    id: 1, 
+    title: 'Project Alpha', 
+    description: 'Revolutionary CRM solution with AI-powered analytics and customer insights.',
+    image: '/showcase-alpha.png'
+  },
+  { 
+    id: 2, 
+    title: 'Project Beta', 
+    description: 'Next-gen project management tool designed for distributed teams and complex workflows.',
+    image: '/showcase-beta.png' 
+  },
+  { 
+    id: 3, 
+    title: 'Project Gamma', 
+    description: 'Innovative collaboration platform integrating real-time communication and document management.',
+    image: '/showcase-gamma.png'
+  }
+];
 
 export default function Home() {
   return (
-    <div style={{ 
-      minHeight: '100vh', 
-      background: '#f5f5f7'
-    }}>
-      <header style={{ 
-        position: 'absolute', 
-        top: 0, 
-        right: 0, 
-        padding: '1rem', 
-        zIndex: 50 
-      }}>
-        <DropdownMenu />
-      </header>
+    <div className="flex flex-col min-h-screen overflow-x-hidden">
       <main>
+        {/* Hero Section with spark animation */}
         <HeroSection />
+        
+        {/* Features/How It Works Section */}
         <FeaturesSection features={features} />
-        <ShowcaseSection />
+        
+        {/* Showcase Section */}
+        <ShowcaseSection showcases={showcases} />
+        
+        {/* Call to Action Section */}
         <CTASection />
       </main>
+      
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

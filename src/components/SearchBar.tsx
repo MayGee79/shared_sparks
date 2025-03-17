@@ -5,7 +5,6 @@
 // TODO: Revisit when upgrading Next.js or when the issue is resolved.
 
 import { useState } from 'react'
-import { FiSearch } from 'react-icons/fi'
 
 type SearchablePages = {
   title: string;
@@ -103,7 +102,12 @@ export default function SearchBar() {
               color: '#55b7ff',
               background: 'none',
               border: 'none',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              width: '20px',
+              height: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = '#f4b941';
@@ -112,7 +116,19 @@ export default function SearchBar() {
               e.currentTarget.style.color = '#55b7ff';
             }}
           >
-            <FiSearch size={20} />
+            <svg 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+            >
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
           </button>
         </div>
       </form>

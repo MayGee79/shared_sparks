@@ -1,15 +1,20 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 function DashboardWithSession() {
-  const { data: session } = useSession()
+  const [userName, setUserName] = useState('User')
+  
+  useEffect(() => {
+    // In a real app, you would fetch user data here
+    // For now, we'll just use a placeholder
+    setUserName('Guest User')
+  }, [])
 
   return (
     <div style={{ padding: '2rem' }}>
       <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Dashboard</h1>
-      <p>Welcome, {session?.user?.name || 'User'}</p>
+      <p>Welcome, {userName}</p>
     </div>
   )
 }

@@ -4,6 +4,8 @@ import bcrypt from 'bcryptjs'
 import { logger } from '@/lib/logger'
 import { AuthOptions, User as NextAuthUser } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import GithubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 
 export async function verifyCredentials(
   email: string, 
@@ -83,6 +85,14 @@ function handleEmail(email: string | null) {
 
 export const authOptions: AuthOptions = {
   providers: [
+    GithubProvider({
+      clientId: process.env.GITHUB_ID as string,
+      clientSecret: process.env.GITHUB_SECRET as string,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID as string,
+      clientSecret: process.env.GOOGLE_SECRET as string,
+    }),
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
@@ -114,6 +124,33 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async signIn({ user, account, profile }) {
+      if (account?.provider === "github" || account?.provider === "google") {
+        if (!user.email) return false;
+        
+        // Check if user exists
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (!existingUser) {
+          // Create new user if they don't exist
+          await prisma.user.create({
+            data: {
+              email: user.email,
+              firstName: user.name?.split(' ')[0] || '',
+              lastName: user.name?.split(' ').slice(1).join(' ') || '',
+              image: user.image,
+              userType: UserType.PROBLEM_SUBMITTER,
+              emailVerified: new Date(),
+            },
+          });
+        }
+      }
+      return true;
+    },
+  },
   session: { strategy: 'jwt' },
   secret: process.env.NEXTAUTH_SECRET,
 };

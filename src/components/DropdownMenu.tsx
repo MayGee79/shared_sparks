@@ -2,8 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import Link from 'next/link'
-import { useSession, signOut } from 'next-auth/react'
 
 const menuItems = [
   { label: 'Home', href: '/' },
@@ -16,18 +14,7 @@ const menuItems = [
 export default function DropdownMenu() {
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  const [session, setSession] = useState<any>(null)
   
-  // Use effect to safely access session data only on the client
-  useEffect(() => {
-    try {
-      const { data } = useSession()
-      setSession(data)
-    } catch (e) {
-      console.error('Error accessing session in DropdownMenu:', e)
-    }
-  }, [])
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {

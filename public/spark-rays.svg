@@ -1,0 +1,64 @@
+<svg width="1000" height="1000" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="sparkGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <stop offset="0%" stop-color="#cbb491" stop-opacity="1" />
+      <stop offset="70%" stop-color="#cbb491" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#cbb491" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <!-- Central glow -->
+  <circle cx="500" cy="500" r="80" fill="url(#sparkGradient)" />
+  
+  <!-- Rays -->
+  <g stroke="#cbb491" stroke-opacity="0.8">
+    <!-- Long rays -->
+    <line x1="500" y1="500" x2="0" y2="500" stroke-width="3" />
+    <line x1="500" y1="500" x2="1000" y2="500" stroke-width="3" />
+    <line x1="500" y1="500" x2="500" y2="0" stroke-width="3" />
+    <line x1="500" y1="500" x2="500" y2="1000" stroke-width="3" />
+    
+    <line x1="500" y1="500" x2="146" y2="146" stroke-width="3" />
+    <line x1="500" y1="500" x2="854" y2="146" stroke-width="3" />
+    <line x1="500" y1="500" x2="146" y2="854" stroke-width="3" />
+    <line x1="500" y1="500" x2="854" y2="854" stroke-width="3" />
+
+    <!-- Medium rays -->
+    <line x1="500" y1="500" x2="250" y2="400" stroke-width="2" />
+    <line x1="500" y1="500" x2="750" y2="400" stroke-width="2" />
+    <line x1="500" y1="500" x2="250" y2="600" stroke-width="2" />
+    <line x1="500" y1="500" x2="750" y2="600" stroke-width="2" />
+    
+    <line x1="500" y1="500" x2="400" y2="250" stroke-width="2" />
+    <line x1="500" y1="500" x2="600" y2="250" stroke-width="2" />
+    <line x1="500" y1="500" x2="400" y2="750" stroke-width="2" />
+    <line x1="500" y1="500" x2="600" y2="750" stroke-width="2" />
+    
+    <!-- Short rays -->
+    <line x1="500" y1="500" x2="350" y2="350" stroke-width="1.5" />
+    <line x1="500" y1="500" x2="650" y2="350" stroke-width="1.5" />
+    <line x1="500" y1="500" x2="350" y2="650" stroke-width="1.5" />
+    <line x1="500" y1="500" x2="650" y2="650" stroke-width="1.5" />
+    
+    <line x1="500" y1="500" x2="425" y2="475" stroke-width="1" />
+    <line x1="500" y1="500" x2="575" y2="475" stroke-width="1" />
+    <line x1="500" y1="500" x2="425" y2="525" stroke-width="1" />
+    <line x1="500" y1="500" x2="575" y2="525" stroke-width="1" />
+    
+    <line x1="500" y1="500" x2="475" y2="425" stroke-width="1" />
+    <line x1="500" y1="500" x2="525" y2="425" stroke-width="1" />
+    <line x1="500" y1="500" x2="475" y2="575" stroke-width="1" />
+    <line x1="500" y1="500" x2="525" y2="575" stroke-width="1" />
+  </g>
+  
+  <!-- Small sparkles -->
+  <circle cx="200" cy="300" r="5" fill="#cbb491" opacity="0.8" />
+  <circle cx="800" cy="300" r="6" fill="#cbb491" opacity="0.9" />
+  <circle cx="300" cy="700" r="4" fill="#cbb491" opacity="0.7" />
+  <circle cx="700" cy="700" r="5" fill="#cbb491" opacity="0.8" />
+  <circle cx="350" cy="200" r="3" fill="#cbb491" opacity="0.6" />
+  <circle cx="650" cy="800" r="4" fill="#cbb491" opacity="0.7" />
+  <circle cx="850" cy="450" r="7" fill="#cbb491" opacity="0.9" />
+  <circle cx="150" cy="550" r="6" fill="#cbb491" opacity="0.8" />
+  <circle cx="450" cy="150" r="5" fill="#cbb491" opacity="0.7" />
+  <circle cx="550" cy="850" r="4" fill="#cbb491" opacity="0.6" />
+</svg> 
