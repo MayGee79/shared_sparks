@@ -7,6 +7,7 @@
 export const dynamic = 'force-dynamic'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import { FormField } from '@/components/FormField'
 import { default as nextDynamic } from 'next/dynamic'
 
@@ -57,33 +58,23 @@ const VISIBILITY_OPTIONS = [
 
 export default function Onboarding() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [isLoading, setIsLoading] = useState(true)
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   
   // Initial form data state
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     bio: '',
-    company: '',
-    location: '',
-    
-    // Professional Background
     industry: '',
     role: '',
     expertise: [] as string[],
     skills: [] as string[],
-    
-    // Interests and Goals
     interests: [] as string[],
     goals: [] as string[],
-    
-    // Social Links
     twitter: '',
     linkedin: '',
     github: '',
-    
-    // Privacy Settings
     allowCollaboration: true,
     profileVisibility: 'public',
     notificationPrefs: {
@@ -93,81 +84,82 @@ export default function Onboarding() {
     }
   })
 
-  // Use effect to simulate authentication check
   useEffect(() => {
-    // Simulate fetching user data
-    setTimeout(() => {
-      // For demo purposes, setting isAuthenticated to false
-      setIsAuthenticated(false);
-      
-      // Populate form with sample data (in a real app, this would be from the session)
-      setFormData(prevData => ({
-        ...prevData,
-        firstName: 'John',
-        lastName: 'Doe',
-      }));
-      
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin')
+      return
+    }
+
+    if (status === 'authenticated' && session?.user?.email) {
+      // Fetch existing profile data
+      fetch('/api/user/profile')
+        .then(res => res.json())
+        .then(data => {
+          if (data.hasCompletedOnboarding) {
+            router.push('/dashboard')
+            return
+          }
+          
+          // Pre-fill form with any existing data
+          if (data.profile) {
+            setFormData(prev => ({
+              ...prev,
+              ...data.profile
+            }))
+          }
+          setIsLoading(false)
+        })
+        .catch(error => {
+          console.error('Error fetching profile:', error)
+          setIsLoading(false)
+        })
+    }
+  }, [status, session, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
+    
     try {
-      // In a real app, this would send data to your API
-      console.log('Submitting form data:', formData);
-      
-      // Simulate successful submission
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 500);
+      const res = await fetch('/api/user/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) {
+        throw new Error('Failed to update profile')
+      }
+
+      router.push('/dashboard')
     } catch (error) {
       console.error('Profile update failed:', error)
+      setIsLoading(false)
     }
   }
 
-  if (isLoading) {
+  if (status === 'loading' || isLoading) {
     return (
-      <div style={{ 
-        minHeight: '100vh', 
-        backgroundColor: 'rgba(85, 183, 255, 0.1)',
-        padding: '2rem', 
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>Loading...</h2>
+      <div className="min-h-screen bg-blue-50 p-8 flex justify-center items-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold mb-4">Loading...</h2>
         </div>
       </div>
     )
   }
 
-  if (!isAuthenticated) {
+  if (status === 'unauthenticated') {
     return (
-      <div style={{ 
-        minHeight: '100vh', 
-        backgroundColor: 'rgba(85, 183, 255, 0.1)',
-        padding: '2rem',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <div style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+      <div className="min-h-screen bg-blue-50 p-8 flex justify-center items-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold mb-4">
             Please log in to continue onboarding.
           </h2>
           <a 
-            href="/auth/signin" 
-            style={{ 
-              display: 'inline-block',
-              padding: '0.5rem 1rem',
-              backgroundColor: '#4299e1',
-              color: 'white',
-              textDecoration: 'none',
-              borderRadius: '0.25rem',
-              fontWeight: 'bold'
-            }}
+            href="/auth/signin"
+            className="inline-block px-4 py-2 bg-blue-500 text-white font-bold rounded hover:bg-blue-600"
           >
             Sign In
           </a>
