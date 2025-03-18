@@ -289,9 +289,7 @@ export default function OnboardingPage() {
                     onChange={(values) => setFormData({ ...formData, interests: values })}
                     options={INTERESTS_OPTIONS}
                     multiple
-                    size={5}
                   />
-                  <p className="text-sm text-white/70 mt-1">Hold Ctrl (or Cmd on Mac) to select multiple interests</p>
                 </div>
                 
                 <div>
@@ -303,9 +301,7 @@ export default function OnboardingPage() {
                     onChange={(values) => setFormData({ ...formData, goals: values })}
                     options={GOALS_OPTIONS}
                     multiple
-                    size={5}
                   />
-                  <p className="text-sm text-white/70 mt-1">Hold Ctrl (or Cmd on Mac) to select multiple goals</p>
                 </div>
               </div>
             </section>
