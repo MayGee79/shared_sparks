@@ -148,225 +148,8 @@ export default function OnboardingPage() {
 
   if (status === 'loading' || isLoading) {
     return (
-      <div className="min-h-screen bg-primary text-white p-8">
-        <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-sm rounded-lg shadow-md p-8">
-          <div className="flex flex-col items-center mb-8">
-            <h1 className="text-4xl font-bold text-white mt-6">
-              Complete Your Profile
-            </h1>
-            <p className="text-white/80 mt-2">Help us personalize your experience</p>
-          </div>
-          
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-8">
-              {/* Basic Info Section */}
-              <section>
-                <h2 className="text-xl font-semibold text-accent mb-4">
-                  Basic Information
-                </h2>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="First Name"
-                      id="firstName"
-                      type="text"
-                      value={formData.firstName}
-                      onChange={(value) => setFormData({ ...formData, firstName: value })}
-                      placeholder="Enter your first name"
-                      required
-                    />
-                    
-                    <FormField
-                      label="Last Name"
-                      id="lastName"
-                      type="text"
-                      value={formData.lastName}
-                      onChange={(value) => setFormData({ ...formData, lastName: value })}
-                      placeholder="Enter your last name"
-                      required
-                    />
-                  </div>
-
-                  <FormField
-                    label="Bio"
-                    id="bio"
-                    type="textarea"
-                    value={formData.bio}
-                    onChange={(value) => setFormData({ ...formData, bio: value })}
-                    placeholder="Tell us about yourself"
-                    required
-                  />
-                </div>
-              </section>
-
-              {/* Professional Background Section */}
-              <section>
-                <h2 className="text-xl font-semibold text-accent mb-4">
-                  Professional Background
-                </h2>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      label="Industry"
-                      id="industry"
-                      type="select"
-                      value={formData.industry}
-                      onChange={(value) => setFormData({ ...formData, industry: value })}
-                      options={INDUSTRY_OPTIONS}
-                      required
-                    />
-
-                    <FormField
-                      label="Role"
-                      id="role"
-                      type="select"
-                      value={formData.role}
-                      onChange={(value) => setFormData({ ...formData, role: value })}
-                      options={ROLE_OPTIONS}
-                      required
-                    />
-                  </div>
-                </div>
-              </section>
-
-              {/* Interests & Goals Section */}
-              <section>
-                <h2 className="text-xl font-semibold text-accent mb-4">
-                  Interests & Goals
-                </h2>
-                <div className="space-y-4">
-                  <FormField
-                    label="Select Your Interests"
-                    id="interests"
-                    type="select"
-                    value={formData.interests}
-                    onChange={(values) => setFormData({ ...formData, interests: values })}
-                    options={INTERESTS_OPTIONS}
-                    multiple
-                    size={5}
-                  />
-                  
-                  <FormField
-                    label="Your Goals on the Platform"
-                    id="goals"
-                    type="select"
-                    value={formData.goals}
-                    onChange={(values) => setFormData({ ...formData, goals: values })}
-                    options={GOALS_OPTIONS}
-                    multiple
-                    size={5}
-                  />
-                </div>
-              </section>
-
-              {/* Social Media Links */}
-              <section>
-                <h2 className="text-xl font-semibold text-accent mb-4">
-                  Social Media Links
-                </h2>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-1">
-                        LinkedIn
-                      </label>
-                      <input
-                        type="url"
-                        value={formData.linkedin}
-                        onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                        className="w-full bg-white/20 text-white rounded-md border-0 focus:ring-accent focus:border-accent"
-                        placeholder="https://linkedin.com/in/username"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-white mb-1">
-                        GitHub
-                      </label>
-                      <input
-                        type="url"
-                        value={formData.github}
-                        onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-                        className="w-full bg-white/20 text-white rounded-md border-0 focus:ring-accent focus:border-accent"
-                        placeholder="https://github.com/username"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-1">
-                      Twitter
-                    </label>
-                    <input
-                      type="url"
-                      value={formData.twitter}
-                      onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
-                      className="w-full bg-white/20 text-white rounded-md border-0 focus:ring-accent focus:border-accent"
-                      placeholder="https://twitter.com/username"
-                    />
-                  </div>
-                </div>
-              </section>
-
-              {/* Privacy Settings */}
-              <section>
-                <h2 className="text-xl font-semibold text-accent mb-4">
-                  Privacy Settings
-                </h2>
-                <div className="space-y-4">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id="allowCollaboration"
-                      checked={formData.allowCollaboration}
-                      onChange={(e) => setFormData({ ...formData, allowCollaboration: e.target.checked })}
-                      className="h-4 w-4 text-accent focus:ring-accent rounded"
-                    />
-                    <label htmlFor="allowCollaboration" className="ml-2 block text-sm text-white">
-                      Allow other users to send me collaboration requests
-                    </label>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-white mb-1">
-                      Profile Visibility
-                    </label>
-                    <select
-                      value={formData.profileVisibility}
-                      onChange={(e) => setFormData({ ...formData, profileVisibility: e.target.value })}
-                      className="w-full bg-white/20 text-white rounded-md border-0 focus:ring-accent focus:border-accent"
-                    >
-                      {VISIBILITY_OPTIONS.map(option => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </section>
-
-              {/* Submit Button */}
-              <div className="flex justify-center pt-6">
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="px-8 py-3 bg-accent text-primary font-bold rounded-full hover:bg-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 disabled:opacity-75 transition-colors duration-300"
-                >
-                  {isLoading ? 'Saving...' : 'Save Profile'}
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    )
-  }
-
-  if (status === 'unauthenticated') {
-    return (
-      <div className="min-h-screen bg-primary text-white p-8">
-        <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-sm rounded-lg shadow-md p-8">
+      <div className="min-h-screen p-8" style={{ backgroundColor: 'var(--background)' }}>
+        <div className="max-w-3xl mx-auto bg-primary rounded-lg shadow-md p-8">
           <div className="flex flex-col items-center mb-8">
             <h1 className="text-4xl font-bold text-white mt-6">
               Complete Your Profile
@@ -375,7 +158,26 @@ export default function OnboardingPage() {
           </div>
           
           <div className="text-center">
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-xl font-bold mb-4 text-white">Loading...</h2>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (status === 'unauthenticated') {
+    return (
+      <div className="min-h-screen p-8" style={{ backgroundColor: 'var(--background)' }}>
+        <div className="max-w-3xl mx-auto bg-primary rounded-lg shadow-md p-8">
+          <div className="flex flex-col items-center mb-8">
+            <h1 className="text-4xl font-bold text-white mt-6">
+              Complete Your Profile
+            </h1>
+            <p className="text-white/80 mt-2">Help us personalize your experience</p>
+          </div>
+          
+          <div className="text-center">
+            <h2 className="text-xl font-bold mb-4 text-white">
               Please log in to continue onboarding.
             </h2>
             <a 
@@ -391,8 +193,8 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-primary text-white p-8">
-      <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-sm rounded-lg shadow-md p-8">
+    <div className="min-h-screen p-8" style={{ backgroundColor: 'var(--background)' }}>
+      <div className="max-w-3xl mx-auto bg-primary rounded-lg shadow-md p-8">
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-4xl font-bold text-white mt-6">
             Complete Your Profile
