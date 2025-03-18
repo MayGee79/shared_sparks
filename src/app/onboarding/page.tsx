@@ -280,27 +280,33 @@ export default function OnboardingPage() {
                 Interests & Goals
               </h2>
               <div className="space-y-4">
-                <FormField
-                  label="Select Your Interests"
-                  id="interests"
-                  type="select"
-                  value={formData.interests}
-                  onChange={(values) => setFormData({ ...formData, interests: values })}
-                  options={INTERESTS_OPTIONS}
-                  multiple
-                  size={5}
-                />
+                <div>
+                  <FormField
+                    label="Select Your Interests"
+                    id="interests"
+                    type="select"
+                    value={formData.interests}
+                    onChange={(values) => setFormData({ ...formData, interests: values })}
+                    options={INTERESTS_OPTIONS}
+                    multiple
+                    size={5}
+                  />
+                  <p className="text-sm text-white/70 mt-1">Hold Ctrl (or Cmd on Mac) to select multiple interests</p>
+                </div>
                 
-                <FormField
-                  label="Your Goals on the Platform"
-                  id="goals"
-                  type="select"
-                  value={formData.goals}
-                  onChange={(values) => setFormData({ ...formData, goals: values })}
-                  options={GOALS_OPTIONS}
-                  multiple
-                  size={5}
-                />
+                <div>
+                  <FormField
+                    label="Your Goals on the Platform"
+                    id="goals"
+                    type="select"
+                    value={formData.goals}
+                    onChange={(values) => setFormData({ ...formData, goals: values })}
+                    options={GOALS_OPTIONS}
+                    multiple
+                    size={5}
+                  />
+                  <p className="text-sm text-white/70 mt-1">Hold Ctrl (or Cmd on Mac) to select multiple goals</p>
+                </div>
               </div>
             </section>
 

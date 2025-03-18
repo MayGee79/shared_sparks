@@ -36,15 +36,21 @@ export function FormField({
 
   return (
     <div style={{ marginBottom: '1rem' }}>
-      <label htmlFor={id} style={{ 
-        display: 'block', 
-        fontSize: '0.875rem', 
-        fontWeight: '500', 
-        color: 'white',
+      <div style={{ 
+        display: 'flex',
+        alignItems: 'center',
         marginBottom: '0.25rem'
       }}>
-        {label}
-      </label>
+        <label htmlFor={id} style={{ 
+          display: 'block', 
+          fontSize: '0.875rem', 
+          fontWeight: '500', 
+          color: 'white'
+        }}>
+          {label}
+        </label>
+        {multiple && <span style={{ marginLeft: '0.5rem', color: 'var(--accent)', fontSize: '0.75rem' }}>(multi-select)</span>}
+      </div>
       
       {type === 'textarea' ? (
         <textarea
@@ -71,7 +77,8 @@ export function FormField({
           }}
           style={{
             ...baseStyles,
-            backgroundColor: 'white'
+            backgroundColor: 'white',
+            ...(multiple ? { border: '2px solid var(--accent)' } : {})
           }}
           multiple={multiple}
           size={size}
