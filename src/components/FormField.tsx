@@ -28,9 +28,9 @@ export function FormField({
     display: 'block',
     width: '100%',
     borderRadius: '0.375rem',
-    border: '1px solid #374151',
-    backgroundColor: '#1a365d',
-    color: 'white',
+    border: '1px solid #cbd5e0',
+    backgroundColor: 'white',
+    color: 'var(--primary)',
     padding: '0.5rem 0.75rem'
   }
 
@@ -71,7 +71,7 @@ export function FormField({
           }}
           style={{
             ...baseStyles,
-            backgroundColor: '#1a365d'
+            backgroundColor: 'white'
           }}
           multiple={multiple}
           size={size}
@@ -79,7 +79,7 @@ export function FormField({
           required={required}
         >
           {options?.map(option => (
-            <option key={option.value} value={option.value} style={{ backgroundColor: '#1a365d', color: 'white' }}>
+            <option key={option.value} value={option.value} style={{ backgroundColor: 'white', color: 'var(--primary)' }}>
               {option.label}
             </option>
           ))}
