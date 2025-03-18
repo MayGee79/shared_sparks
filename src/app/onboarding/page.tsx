@@ -56,7 +56,12 @@ const VISIBILITY_OPTIONS = [
 
 export default function OnboardingPage() {
   const router = useRouter()
-  const { data: session, status } = useSession()
+  
+  // Add safe session handling with fallback
+  const sessionResult = useSession()
+  const status = sessionResult?.status || 'loading'
+  const session = sessionResult?.data || null
+  
   const [isLoading, setIsLoading] = useState(true)
   
   // Initial form data state
@@ -111,6 +116,9 @@ export default function OnboardingPage() {
           console.error('Error fetching profile:', error)
           setIsLoading(false)
         })
+    } else if (status === 'authenticated') {
+      // If authenticated but no email, still allow form access
+      setIsLoading(false)
     }
   }, [status, session, router])
 
