@@ -1,5 +1,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
+import AuthProvider from '@/components/providers/AuthProvider'
 
 export const metadata: Metadata = {
   title: 'Shared Sparks',
@@ -21,7 +22,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )
