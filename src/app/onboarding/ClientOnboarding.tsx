@@ -2,7 +2,16 @@
 
 import { FormField } from '@/components/FormField'
 
-export default function OnboardingPage() {
+const INDUSTRY_OPTIONS = [
+  { value: '', label: 'Select Industry' },
+  { value: 'technology', label: 'Technology' },
+  { value: 'healthcare', label: 'Healthcare' },
+  { value: 'education', label: 'Education' },
+  { value: 'finance', label: 'Finance' },
+  { value: 'other', label: 'Other' }
+]
+
+export default function ClientOnboarding() {
   return (
     <div className="min-h-screen bg-blue-50 p-8">
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8">
@@ -21,7 +30,7 @@ export default function OnboardingPage() {
                   label="First Name"
                   id="firstName"
                   value=""
-                  onChange={() => {}}
+                  onChange={(value) => console.log(value)}
                   placeholder="Enter your first name"
                   required
                 />
@@ -29,7 +38,7 @@ export default function OnboardingPage() {
                   label="Last Name"
                   id="lastName"
                   value=""
-                  onChange={() => {}}
+                  onChange={(value) => console.log(value)}
                   placeholder="Enter your last name"
                   required
                 />
@@ -40,7 +49,7 @@ export default function OnboardingPage() {
                   id="bio"
                   type="textarea"
                   value=""
-                  onChange={() => {}}
+                  onChange={(value) => console.log(value)}
                   placeholder="Tell us about yourself"
                 />
               </div>
@@ -59,4 +68,4 @@ export default function OnboardingPage() {
       </div>
     </div>
   )
-}
+} 
