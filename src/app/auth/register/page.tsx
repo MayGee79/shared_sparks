@@ -39,7 +39,8 @@ export default function RegisterPage() {
         if (result?.error) {
           setError('Error signing in after registration')
         } else {
-          router.push('/dashboard')
+          // Redirect to onboarding instead of dashboard
+          router.push('/onboarding')
         }
       } else {
         const data = await res.json()
@@ -53,7 +54,8 @@ export default function RegisterPage() {
   }
 
   const handleSocialLogin = (provider: string) => {
-    signIn(provider, { callbackUrl: '/dashboard' })
+    // Redirect social logins to onboarding as well
+    signIn(provider, { callbackUrl: '/onboarding' })
   }
 
   return (
