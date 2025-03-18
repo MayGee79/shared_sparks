@@ -28,7 +28,9 @@ export function FormField({
     display: 'block',
     width: '100%',
     borderRadius: '0.375rem',
-    border: '1px solid #d1d5db',
+    border: '1px solid #374151',
+    backgroundColor: '#1a365d',
+    color: 'white',
     padding: '0.5rem 0.75rem'
   }
 
@@ -38,7 +40,7 @@ export function FormField({
         display: 'block', 
         fontSize: '0.875rem', 
         fontWeight: '500', 
-        color: '#374151',
+        color: 'white',
         marginBottom: '0.25rem'
       }}>
         {label}
@@ -67,14 +69,17 @@ export function FormField({
               onChange(e.target.value);
             }
           }}
-          style={baseStyles}
+          style={{
+            ...baseStyles,
+            backgroundColor: '#1a365d'
+          }}
           multiple={multiple}
           size={size}
           aria-label={label}
           required={required}
         >
           {options?.map(option => (
-            <option key={option.value} value={option.value}>
+            <option key={option.value} value={option.value} style={{ backgroundColor: '#1a365d', color: 'white' }}>
               {option.label}
             </option>
           ))}

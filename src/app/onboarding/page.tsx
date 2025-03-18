@@ -194,7 +194,7 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen p-8" style={{ backgroundColor: 'var(--background)' }}>
-      <div className="max-w-3xl mx-auto bg-primary rounded-lg shadow-md p-8">
+      <div className="max-w-3xl mx-auto bg-primary rounded-lg shadow-xl p-8">
         <div className="flex flex-col items-center mb-8">
           <h1 className="text-4xl font-bold text-white mt-6">
             Complete Your Profile
@@ -319,7 +319,7 @@ export default function OnboardingPage() {
                       type="url"
                       value={formData.linkedin}
                       onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
-                      className="w-full bg-white/20 text-white rounded-md border-0 focus:ring-accent focus:border-accent"
+                      className="w-full bg-primary-light text-white rounded-md border-gray-700 focus:ring-accent focus:border-accent"
                       placeholder="https://linkedin.com/in/username"
                     />
                   </div>
@@ -332,7 +332,7 @@ export default function OnboardingPage() {
                       type="url"
                       value={formData.github}
                       onChange={(e) => setFormData({ ...formData, github: e.target.value })}
-                      className="w-full bg-white/20 text-white rounded-md border-0 focus:ring-accent focus:border-accent"
+                      className="w-full bg-primary-light text-white rounded-md border-gray-700 focus:ring-accent focus:border-accent"
                       placeholder="https://github.com/username"
                     />
                   </div>
@@ -346,7 +346,7 @@ export default function OnboardingPage() {
                     type="url"
                     value={formData.twitter}
                     onChange={(e) => setFormData({ ...formData, twitter: e.target.value })}
-                    className="w-full bg-white/20 text-white rounded-md border-0 focus:ring-accent focus:border-accent"
+                    className="w-full bg-primary-light text-white rounded-md border-gray-700 focus:ring-accent focus:border-accent"
                     placeholder="https://twitter.com/username"
                   />
                 </div>
@@ -379,10 +379,10 @@ export default function OnboardingPage() {
                   <select
                     value={formData.profileVisibility}
                     onChange={(e) => setFormData({ ...formData, profileVisibility: e.target.value })}
-                    className="w-full bg-white/20 text-white rounded-md border-0 focus:ring-accent focus:border-accent"
+                    className="w-full bg-primary-light text-white rounded-md border-gray-700 focus:ring-accent focus:border-accent"
                   >
                     {VISIBILITY_OPTIONS.map(option => (
-                      <option key={option.value} value={option.value}>
+                      <option key={option.value} value={option.value} className="bg-primary text-white">
                         {option.label}
                       </option>
                     ))}
