@@ -3,7 +3,6 @@
 import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -105,12 +104,13 @@ export default function DashboardPage() {
       <div className="w-64 bg-accent p-6 flex flex-col fixed h-full">
         <div className="text-center mb-8">
           {session?.user?.image ? (
-            <Image
+            <img
               src={session.user.image}
               alt={session.user.name || 'Profile'}
               width={96}
               height={96}
               className="rounded-full mx-auto mb-4"
+              style={{ width: '96px', height: '96px', objectFit: 'cover' }}
             />
           ) : (
             <div className="w-24 h-24 bg-primary rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl">
