@@ -3,85 +3,15 @@ import { PrismaClient, UserType } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  // 1. Clear existing data
-  await prisma.comment.deleteMany()
-  await prisma.problem.deleteMany()
-  await prisma.user.deleteMany()
-
-  // 2. Create users
-  const user1 = await prisma.user.create({
-    data: {
-      firstName: 'User',
-      lastName: 'One',
-      email: 'user1@example.com',
-      userType: UserType.PROBLEM_SUBMITTER, // Use enum value directly
-      emailVerified: new Date(),
-      hashedPassword: 'placeholder_password_hash'
-    }
-  })
-
-  const user2 = await prisma.user.create({
-    data: {
-      firstName: 'User',
-      lastName: 'Two',
-      email: 'user2@example.com',
-      userType: UserType.PROBLEM_SOLVER, // Corrected enum value
-      emailVerified: new Date(),
-      hashedPassword: 'placeholder_password_hash'
-    }
-  })
-
-  const user3 = await prisma.user.create({
-    data: {
-      firstName: 'User',
-      lastName: 'Three',
-      email: 'user3@example.com',
-      userType: UserType.PROBLEM_SUBMITTER,
-      emailVerified: new Date(),
-      hashedPassword: 'placeholder_password_hash'
-    }
-  })
-
-  // 3. Create a problem with all required fields
-  const problem = await prisma.problem.create({
-    data: {
-      title: 'Sample Technology Problem',
-      description: 'A detailed description of the technology challenge',
-      category: 'Software Development',
-      industry: 'Information Technology',
-      status: 'OPEN', // Use string literal instead of enum value
-      submitterId: user1.id,
-      voteCount: 0 // explicitly set, though it defaults to 0
-    }
-  })
-
-  // 4. Create comments
-  await prisma.comment.createMany({
-    data: [
-      {
-        content: 'Insightful first comment',
-        userId: user2.id,
-        problemId: problem.id
-      },
-      {
-        content: 'Another perspective on the problem',
-        userId: user3.id,
-        problemId: problem.id
-      },
-      {
-        content: 'Additional commentary',
-        userId: user1.id,
-        problemId: problem.id
-      }
-    ]
-  })
-
-  console.log('Database seeding completed successfully!')
+  console.log('Seeding database...')
+  
+  // This is a no-op seed file for deployment purposes
+  // We'll implement actual seeding in the application after deployment
 }
 
 main()
-  .catch((e) => {
-    console.error('Seeding error:', e)
+  .catch(e => {
+    console.error(e)
     process.exit(1)
   })
   .finally(async () => {
