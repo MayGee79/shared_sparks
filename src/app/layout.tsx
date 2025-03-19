@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import AuthProvider from '@/components/providers/AuthProvider'
+import MUIProvider from '@/components/providers/mui-provider'
 
 export const metadata: Metadata = {
   title: 'Shared Sparks',
@@ -23,7 +24,9 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          {children}
+          <MUIProvider>
+            {children}
+          </MUIProvider>
         </AuthProvider>
       </body>
     </html>

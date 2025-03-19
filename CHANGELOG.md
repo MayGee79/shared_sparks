@@ -5,6 +5,8 @@ All notable changes to Shared Sparks will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Knowledge documentation structure in docs/knowledge
+- README.md for knowledge documentation with guidelines
 - GitHub OAuth authentication setup
 - Environment variables configuration (.env.local)
 - Security: Added .env.local to .gitignore
@@ -20,6 +22,16 @@ All notable changes to Shared Sparks will be documented in this file.
 - Extended session handling with proper TypeScript types
 - Custom error and sign-in pages
 - Debug mode for authentication flow
+- Database schema documentation in docs/knowledge/database
+
+### Fixed
+- UserType enum inconsistencies in changes.log
+- Documentation for UserType enum values
+- Tailwind CSS configuration issues
+- Header image responsiveness
+- Favicon implementation
+- Button hover states
+- Security: Protected sensitive environment variables
 
 ## [1.0.0] - 2024-03-19
 
@@ -41,10 +53,3 @@ All notable changes to Shared Sparks will be documented in this file.
 - Improved navigation layout
 - Styled Sign In and Register buttons
 - Updated About Us link to mAIven website
-
-### Fixed
-- Tailwind CSS configuration issues
-- Header image responsiveness
-- Favicon implementation
-- Button hover states
-- Security: Protected sensitive environment variables
