@@ -1,9 +1,17 @@
+'use client'
+
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useRouter } from 'next/navigation'
+import { Search } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 
 export default function HeroSection() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const router = useRouter()
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -17,6 +25,13 @@ export default function HeroSection() {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`)
+    }
+  }
 
   // Animation variants
   const fadeInUp = {
@@ -95,12 +110,12 @@ export default function HeroSection() {
                           href={
                             item === 'Home' ? '/' : 
                             item === 'About Us' ? '/about' :
-                            item === 'SaaS Directory' ? '/saas' :
+                            item === 'SaaS Directory' ? '/search' :
                             item === 'FAQs' ? '/faqs' :
                             item === 'Blog / Insights' ? '/blog' :
                             item === 'Contact Us' ? '/contact' :
-                            item === 'Register' ? '/auth/register' :
-                            item === 'Log In' ? '/auth/login' :
+                            item === 'Register' ? '/signup' :
+                            item === 'Log In' ? '/signin' :
                             '/'
                           } 
                           className="dropdown-menu-item block"
@@ -150,20 +165,71 @@ export default function HeroSection() {
               Connect with innovators, share your ideas, and build the next generation of software solutions.
             </motion.p>
             
+            {/* Search Form */}
             <motion.div
               custom={2}
               variants={fadeInUp}
               initial="hidden"
               animate="visible"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="max-w-2xl mx-auto mb-8"
             >
-              <a 
-                href="/auth/register" 
-                className="text-lg px-8 py-4 relative group overflow-hidden rounded-full bg-primary text-white transition-colors duration-300 hover:bg-accent"
+              <form 
+                onSubmit={handleSearch}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4"
               >
-                <span className="relative z-10">Get Started</span>
-              </a>
+                <div className="relative w-full">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary/60" />
+                  <Input
+                    type="text"
+                    placeholder="Search for SaaS tools..."
+                    className="pl-10 py-6 text-lg w-full bg-white/90 text-primary border-none focus-visible:ring-accent"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  className="w-full sm:w-auto px-8 bg-accent hover:bg-accent/80 text-white"
+                >
+                  Search
+                </Button>
+              </form>
+            </motion.div>
+            
+            {/* Popular searches */}
+            <motion.div
+              custom={3}
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-wrap justify-center gap-4 text-sm"
+            >
+              <span className="text-white/80">Popular searches:</span>
+              <button 
+                onClick={() => router.push('/search?category=Marketing')}
+                className="text-white hover:text-accent hover:underline"
+              >
+                Marketing
+              </button>
+              <button 
+                onClick={() => router.push('/search?category=Productivity')}
+                className="text-white hover:text-accent hover:underline"
+              >
+                Productivity
+              </button>
+              <button 
+                onClick={() => router.push('/search?category=Development')}
+                className="text-white hover:text-accent hover:underline"
+              >
+                Development
+              </button>
+              <button 
+                onClick={() => router.push('/search?category=Analytics')}
+                className="text-white hover:text-accent hover:underline"
+              >
+                Analytics
+              </button>
             </motion.div>
           </div>
         </div>

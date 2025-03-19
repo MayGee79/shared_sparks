@@ -1,0 +1,5 @@
+-- AlterEnum
+ALTER TYPE "UserType" ADD VALUE 'ADMIN';
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "userType" SET DEFAULT 'DEVELOPER';

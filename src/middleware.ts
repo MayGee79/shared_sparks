@@ -1,73 +1,55 @@
-import { withAuth } from 'next-auth/middleware'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
+import { getToken } from 'next-auth/jwt'
 
-// Handle admin routes first
-function handleAdminRoutes(request: NextRequest) {
-  if (request.nextUrl.pathname === '/admin-login') {
+export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname
+  
+  // Define public paths that don't require authentication
+  const isPublicPath = path === '/signin' || 
+                        path === '/signup' || 
+                        path === '/admin-login' ||
+                        path.startsWith('/api/auth') ||
+                        path === '/' ||
+                        path.startsWith('/saas') ||
+                        path.startsWith('/_next') ||
+                        path.startsWith('/favicon')
+  
+  // Define admin paths that require admin privileges
+  const isAdminPath = path.startsWith('/admin')
+  
+  // Get the session token
+  const token = await getToken({ 
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET
+  })
+
+  // If it's a public path, allow the request
+  if (isPublicPath) {
     return NextResponse.next()
   }
 
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    const referer = request.headers.get('referer')
-    if (referer?.includes('/admin-login')) {
-      return NextResponse.next()
-    }
-    return NextResponse.redirect(new URL('/admin-login', request.url))
+  // If user is not logged in and trying to access a protected route, redirect to signin
+  if (!token && !isPublicPath) {
+    const url = new URL('/signin', request.url)
+    url.searchParams.set('callbackUrl', encodeURI(request.url))
+    return NextResponse.redirect(url)
   }
 
-  return null
+  // If user is trying to access admin routes but doesn't have admin role
+  if (isAdminPath && token && token.role !== 'ADMIN') {
+    // Redirect to admin login with unauthorized error
+    const url = new URL('/admin-login', request.url)
+    url.searchParams.set('error', 'unauthorized')
+    return NextResponse.redirect(url)
+  }
+
+  return NextResponse.next()
 }
 
-export default withAuth(
-  function middleware(request) {
-    // Allow access to registration and auth pages
-    if (
-      request.nextUrl.pathname.startsWith('/auth/register') ||
-      request.nextUrl.pathname.startsWith('/auth/login') ||
-      request.nextUrl.pathname.startsWith('/auth/error')
-    ) {
-      return NextResponse.next()
-    }
-
-    // Check admin routes
-    const adminResponse = handleAdminRoutes(request)
-    if (adminResponse) {
-      return adminResponse
-    }
-
-    return NextResponse.next()
-  },
-  {
-    pages: {
-      signIn: '/auth/login',
-      error: '/auth/error',
-      newUser: '/onboarding'
-    },
-    callbacks: {
-      authorized: ({ token, req }) => {
-        // Allow access to registration and auth pages without a token
-        if (
-          req.nextUrl.pathname.startsWith('/auth/register') ||
-          req.nextUrl.pathname.startsWith('/auth/login') ||
-          req.nextUrl.pathname.startsWith('/auth/error')
-        ) {
-          return true
-        }
-        // Require token for all other protected routes
-        return !!token
-      }
-    }
-  }
-)
-
+// See "Matching Paths" below to learn more
 export const config = {
   matcher: [
-    '/admin/:path*', 
-    '/admin-login',
-    '/dashboard/:path*',
-    '/profile/:path*',
-    '/auth/:path*',  // Added auth paths to matcher
-    '/onboarding'    // Added onboarding path to matcher
-  ]
+    '/((?!api/public|_next/static|_next/image|favicon.ico).*)',
+    '/admin/:path*'
+  ],
 }

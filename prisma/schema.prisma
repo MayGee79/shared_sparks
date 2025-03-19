@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id
   userId            String
   type              String
   provider          String
@@ -20,60 +20,35 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  User              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Activity {
+  id        String   @id
+  title     String
+  content   String?
+  userEmail String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [userEmail], references: [email])
+
+  @@index([userEmail])
 }
 
-model User {
-  id                 String                 @id @default(cuid())
-  email              String?                @unique
-  userType           UserType               @default(PROBLEM_SUBMITTER)
-  emailVerified      DateTime?
-  hashedPassword     String?                @default("")
-  image              String?
-  allowCollaboration Boolean                @default(true)
-  bio                String?
-  createdAt          DateTime               @default(now())
-  expertise          String[]
-  firstName          String?
-  github             String?
-  goals              String[]               @default([])
-  industry           String?
-  interests          String[]               @default([])
-  lastName           String?
-  linkedin           String?
-  notificationPrefs  Json?
-  profileVisibility  String                 @default("public")
-  role               String?
-  skills             String[]
-  twitter            String?
-  updatedAt          DateTime               @default(now())
-  username           String?                @unique
-  accounts           Account[]
-  activities         Activity[]
-  comments           Comment[]
-  problems           Problem[]
-  sessions           Session[]
-  preferences        UserPreference?
-  receivedRequests   CollaborationRequest[] @relation("ReceivedRequests")
-  sentRequests       CollaborationRequest[] @relation("SentRequests")
-  submittedSaaS      SaaS[]                 @relation("SubmittedSaaS")
-  favoriteSaaS       SaaS[]                 @relation("UserFavorites")
-  saasReviews        SaaSReview[]
-  saasFavorites      SaasFavorite[]
+model Comment {
+  id        String   @id
+  content   String
+  problemId String
+  createdAt DateTime @default(now())
+  userId    String
+  Problem   Problem  @relation(fields: [problemId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
 }
 
 model Problem {
-  id          String        @id @default(cuid())
+  id          String        @id
   title       String
   description String
   category    String
@@ -82,19 +57,115 @@ model Problem {
   voteCount   Int           @default(0)
   submitterId String
   createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  comments    Comment[]
-  submitter   User          @relation(fields: [submitterId], references: [id])
+  updatedAt   DateTime
+  Comment     Comment[]
+  User        User          @relation(fields: [submitterId], references: [id])
 }
 
-model Comment {
-  id        String   @id @default(cuid())
+model SaaS {
+  id                          String         @id
+  name                        String
+  description                 String
+  website                     String
+  logo                        String?
+  pricingModel                String
+  pricingDetails              String?
+  category                    String
+  tags                        String[]
+  features                    String[]
+  integrations                String[]
+  pros                        String[]
+  cons                        String[]
+  averageRating               Float?
+  submitterId                 String?
+  verified                    Boolean        @default(false)
+  createdAt                   DateTime       @default(now())
+  updatedAt                   DateTime
+  User_SaaS_submitterIdToUser User?          @relation("SaaS_submitterIdToUser", fields: [submitterId], references: [id])
+  SaaSReview                  SaaSReview[]
+  SaasFavorite                SaasFavorite[]
+  User_UserFavorites          User[]         @relation("UserFavorites")
+  ViewHistory                 ViewHistory[]
+}
+
+model SaaSReview {
+  id        String   @id
   content   String
-  problemId String
-  createdAt DateTime @default(now())
+  rating    Int
+  saasId    String
   userId    String
-  problem   Problem  @relation(fields: [problemId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  SaaS      SaaS     @relation(fields: [saasId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+}
+
+model SaasFavorite {
+  id        String   @id
+  userId    String
+  saasId    String
+  createdAt DateTime @default(now())
+  SaaS      SaaS     @relation(fields: [saasId], references: [id])
+  User      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, saasId])
+}
+
+model Session {
+  id           String   @id
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id                                                             String                   @id
+  email                                                          String?                  @unique
+  userType                                                       UserType                 @default(DEVELOPER)
+  emailVerified                                                  DateTime?
+  hashedPassword                                                 String?                  @default("")
+  image                                                          String?
+  allowCollaboration                                             Boolean                  @default(true)
+  bio                                                            String?
+  createdAt                                                      DateTime                 @default(now())
+  expertise                                                      String[]
+  firstName                                                      String?
+  github                                                         String?
+  goals                                                          String[]                 @default([])
+  industry                                                       String?
+  interests                                                      String[]                 @default([])
+  lastName                                                       String?
+  linkedin                                                       String?
+  notificationPrefs                                              Json?
+  profileVisibility                                              String                   @default("public")
+  role                                                           String?
+  skills                                                         String[]
+  twitter                                                        String?
+  updatedAt                                                      DateTime                 @default(now())
+  username                                                       String?                  @unique
+  Account                                                        Account[]
+  Activity                                                       Activity[]
+  Comment                                                        Comment[]
+  Problem                                                        Problem[]
+  SaaS_SaaS_submitterIdToUser                                    SaaS[]                   @relation("SaaS_submitterIdToUser")
+  SaaSReview                                                     SaaSReview[]
+  SaasFavorite                                                   SaasFavorite[]
+  Session                                                        Session[]
+  UserPreference                                                 UserPreference?
+  collaboration_requests_collaboration_requests_receiverIdToUser collaboration_requests[] @relation("collaboration_requests_receiverIdToUser")
+  collaboration_requests_collaboration_requests_senderIdToUser   collaboration_requests[] @relation("collaboration_requests_senderIdToUser")
+  SaaS_UserFavorites                                             SaaS[]                   @relation("UserFavorites")
+  SavedSearch                                                    SavedSearch[]
+  ViewHistory                                                    ViewHistory[]
+}
+
+model UserPreference {
+  id            String  @id
+  userId        String  @unique
+  notifications Boolean @default(true)
+  theme         String  @default("light")
+  User          User    @relation(fields: [userId], references: [id])
 }
 
 model VerificationToken {
@@ -105,95 +176,56 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model CollaborationRequest {
-  id         String   @id @default(cuid())
-  senderId   String
-  receiverId String
-  status     String   @default("pending")
-  message    String?
-  createdAt  DateTime @default(now())
-  receiver   User     @relation("ReceivedRequests", fields: [receiverId], references: [id])
-  sender     User     @relation("SentRequests", fields: [senderId], references: [id])
-
-  @@map("collaboration_requests")
+model collaboration_requests {
+  id                                           String   @id
+  senderId                                     String
+  receiverId                                   String
+  status                                       String   @default("pending")
+  message                                      String?
+  createdAt                                    DateTime @default(now())
+  User_collaboration_requests_receiverIdToUser User     @relation("collaboration_requests_receiverIdToUser", fields: [receiverId], references: [id])
+  User_collaboration_requests_senderIdToUser   User     @relation("collaboration_requests_senderIdToUser", fields: [senderId], references: [id])
 }
 
-model UserPreference {
-  id            String  @id @default(cuid())
-  userId        String  @unique
-  notifications Boolean @default(true)
-  theme         String  @default("light")
-  user          User    @relation(fields: [userId], references: [id])
+model SavedSearch {
+  id           String   @id @default(cuid())
+  name         String
+  query        String?
+  category     String?
+  pricingModel String?
+  tags         String[] @default([])
+  receiveAlerts Boolean @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  userId       String
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
-model Activity {
+model ViewHistory {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  userEmail String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userEmail], references: [email])
-
-  @@index([userEmail])
-}
-
-model SaaS {
-  id               String          @id @default(cuid())
-  name             String
-  description      String
-  website          String
-  logo             String?
-  pricingModel     String
-  pricingDetails   String?
-  category         String
-  tags             String[]
-  features         String[]
-  integrations     String[]
-  pros             String[]
-  cons             String[]
-  averageRating    Float?
-  submitterId      String?
-  submitter        User?           @relation("SubmittedSaaS", fields: [submitterId], references: [id])
-  verified         Boolean         @default(false)
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  favoritedBy      User[]          @relation("UserFavorites")
-  favorites        SaasFavorite[]
-  reviews          SaaSReview[]
-}
-
-model SaaSReview {
-  id        String   @id @default(cuid())
-  content   String
-  rating    Int
-  saasId    String
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  saas      SaaS     @relation(fields: [saasId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-}
-
-model SaasFavorite {
-  id        String   @id @default(cuid())
+  viewedAt  DateTime @default(now())
+  
   userId    String
   saasId    String
-  createdAt DateTime @default(now())
-  
-  user      User     @relation(fields: [userId], references: [id])
-  saas      SaaS     @relation(fields: [saasId], references: [id])
-  
-  @@unique([userId, saasId])
-}
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  SaaS      SaaS     @relation(fields: [saasId], references: [id], onDelete: Cascade)
 
-enum UserType {
-  PROBLEM_SUBMITTER
-  DEVELOPER
+  @@index([userId])
+  @@index([saasId])
+  @@index([viewedAt])
 }
 
 enum ProblemStatus {
   OPEN
   IN_PROGRESS
   RESOLVED
+}
+
+enum UserType {
+  PROBLEM_SUBMITTER
+  DEVELOPER
+  ADMIN
 }
