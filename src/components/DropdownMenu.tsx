@@ -8,6 +8,7 @@ const menuItems = [
   { label: 'How It Works', href: '#features' },
   { label: 'Submit an Idea', href: '/submit' },
   { label: 'Explore Solutions', href: '/solutions' },
+  { label: 'SaaS Directory', href: '/saas' },
   { label: 'Sign Up / Log In', href: '/auth/login' }
 ]
 

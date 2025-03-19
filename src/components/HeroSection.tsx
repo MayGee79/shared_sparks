@@ -79,7 +79,7 @@ export default function HeroSection() {
                     exit={{ opacity: 0, y: -10, height: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {['Home', 'About Us', 'FAQs', 'Blog / Insights', 'Contact Us', 'Register', 'Log In'].map((item, i) => (
+                    {['Home', 'About Us', 'SaaS Directory', 'FAQs', 'Blog / Insights', 'Contact Us', 'Register', 'Log In'].map((item, i) => (
                       <motion.div
                         key={item}
                         initial={{ opacity: 0, x: -20 }}
@@ -95,6 +95,7 @@ export default function HeroSection() {
                           href={
                             item === 'Home' ? '/' : 
                             item === 'About Us' ? '/about' :
+                            item === 'SaaS Directory' ? '/saas' :
                             item === 'FAQs' ? '/faqs' :
                             item === 'Blog / Insights' ? '/blog' :
                             item === 'Contact Us' ? '/contact' :

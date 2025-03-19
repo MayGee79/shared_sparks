@@ -66,6 +66,10 @@ model User {
   preferences        UserPreference?
   receivedRequests   CollaborationRequest[] @relation("ReceivedRequests")
   sentRequests       CollaborationRequest[] @relation("SentRequests")
+  submittedSaaS      SaaS[]                 @relation("SubmittedSaaS")
+  favoriteSaaS       SaaS[]                 @relation("UserFavorites")
+  saasReviews        SaaSReview[]
+  saasFavorites      SaasFavorite[]
 }
 
 model Problem {
@@ -132,6 +136,55 @@ model Activity {
   user      User     @relation(fields: [userEmail], references: [email])
 
   @@index([userEmail])
+}
+
+model SaaS {
+  id               String          @id @default(cuid())
+  name             String
+  description      String
+  website          String
+  logo             String?
+  pricingModel     String
+  pricingDetails   String?
+  category         String
+  tags             String[]
+  features         String[]
+  integrations     String[]
+  pros             String[]
+  cons             String[]
+  averageRating    Float?
+  submitterId      String?
+  submitter        User?           @relation("SubmittedSaaS", fields: [submitterId], references: [id])
+  verified         Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  favoritedBy      User[]          @relation("UserFavorites")
+  favorites        SaasFavorite[]
+  reviews          SaaSReview[]
+}
+
+model SaaSReview {
+  id        String   @id @default(cuid())
+  content   String
+  rating    Int
+  saasId    String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  saas      SaaS     @relation(fields: [saasId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model SaasFavorite {
+  id        String   @id @default(cuid())
+  userId    String
+  saasId    String
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id])
+  saas      SaaS     @relation(fields: [saasId], references: [id])
+  
+  @@unique([userId, saasId])
 }
 
 enum UserType {

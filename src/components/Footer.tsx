@@ -12,6 +12,7 @@ export default function Footer() {
               {[
                 { name: 'Register', href: '/auth/register' },
                 { name: 'Log In', href: '/auth/login' },
+                { name: 'SaaS Directory', href: '/saas' },
                 { name: 'About Us', href: '/about' },
                 { name: 'FAQs', href: '/faqs' },
                 { name: 'Blog / Insights', href: '/blog' }
