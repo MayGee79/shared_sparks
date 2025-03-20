@@ -1,5 +1,6 @@
 import { PrismaClient, UserType, ProblemStatus } from '@prisma/client'
 import { hash } from 'bcryptjs'
+import { v4 as uuidv4 } from 'uuid'
 
 const prisma = new PrismaClient()
 
@@ -12,6 +13,7 @@ async function main() {
   if (!adminExists) {
     await prisma.user.create({
       data: {
+        id: uuidv4(),
         email: 'admin@example.com',
         firstName: 'Admin',
         lastName: 'User',
@@ -31,6 +33,7 @@ async function main() {
   if (!devExists) {
     await prisma.user.create({
       data: {
+        id: uuidv4(),
         email: 'dev@example.com',
         firstName: 'Developer',
         lastName: 'User',
@@ -50,6 +53,7 @@ async function main() {
   if (!userExists) {
     await prisma.user.create({
       data: {
+        id: uuidv4(),
         email: 'user@example.com',
         firstName: 'Normal',
         lastName: 'User',
@@ -62,9 +66,13 @@ async function main() {
     })
   }
 
+  // Get current date for updatedAt
+  const now = new Date();
+
   // Seed SaaS data
   const saasProductsData = [
     {
+      id: uuidv4(),
       name: 'Trello',
       description: 'Trello is a visual tool for organizing your work and life. Join more than 1 million users who are using Trello to get more done.',
       website: 'https://trello.com',
@@ -78,8 +86,11 @@ async function main() {
       pros: ['User-friendly interface', 'Visual organization', 'Flexible workflow', 'Great mobile app'],
       cons: ['Limited in free version', 'Can become cluttered with many cards', 'Advanced reporting requires add-ons'],
       verified: true,
+      createdAt: now,
+      updatedAt: now,
     },
     {
+      id: uuidv4(),
       name: 'Slack',
       description: 'Slack is a messaging app for business that connects people to the information they need.',
       website: 'https://slack.com',
@@ -93,8 +104,11 @@ async function main() {
       pros: ['Real-time communication', 'Organized conversations', 'Excellent search', 'Rich integrations'],
       cons: ['Can be distracting', 'Limited message history in free plan', 'Can become overwhelming in large organizations'],
       verified: true,
+      createdAt: now,
+      updatedAt: now,
     },
     {
+      id: uuidv4(),
       name: 'Notion',
       description: 'Notion is an all-in-one workspace for notes, tasks, wikis, and databases.',
       website: 'https://notion.so',
@@ -108,8 +122,11 @@ async function main() {
       pros: ['Highly customizable', 'All-in-one solution', 'Great for documentation', 'Elegant UI'],
       cons: ['Steep learning curve', 'Can be slow with large files', 'Mobile apps are limited'],
       verified: true,
+      createdAt: now,
+      updatedAt: now,
     },
     {
+      id: uuidv4(),
       name: 'Asana',
       description: 'Asana helps teams orchestrate their work, from daily tasks to strategic initiatives.',
       website: 'https://asana.com',
@@ -123,8 +140,11 @@ async function main() {
       pros: ['Clear UI', 'Timeline view', 'Custom fields', 'Cross-functional project planning'],
       cons: ['Can get expensive', 'Complex for simple tasks', 'Limited time tracking features'],
       verified: true,
+      createdAt: now,
+      updatedAt: now,
     },
     {
+      id: uuidv4(),
       name: 'Figma',
       description: 'Figma is a vector graphics editor and prototyping tool with real-time collaboration.',
       website: 'https://figma.com',
@@ -138,6 +158,8 @@ async function main() {
       pros: ['Real-time collaboration', 'Browser-based', 'Excellent for UI design', 'Design system friendly'],
       cons: ['Requires internet connection', 'Limited offline capabilities', 'Advanced animations require other tools'],
       verified: true,
+      createdAt: now,
+      updatedAt: now,
     }
   ];
 
