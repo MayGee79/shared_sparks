@@ -21,10 +21,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "test:e2e": "start-server-and-test dev http://localhost:3000 cypress:run",
-    "test:e2e:ci": "start-server-and-test dev http://localhost:3000 'cypress run --record'",
-    "test:pact": "jest --config jest.config.js --testMatch '**/pact/**/*.test.ts'",
-    "test:pact:watch": "jest --config jest.config.js --testMatch '**/pact/**/*.test.ts' --watch",
-    "pact:publish": "pact-broker publish ./pacts --broker-base-url=$PACT_BROKER_URL --broker-token=$PACT_BROKER_TOKEN --consumer-version=$GIT_COMMIT"
+    "test:e2e:ci": "start-server-and-test dev http://localhost:3000 'cypress run --record'"
   },
   "prisma": {
     "seed": "node --require esbuild-register prisma/seed.ts"
@@ -89,10 +86,7 @@
     "typescript": "5.3.3",
     "cypress": "^13.6.4",
     "cypress-axe": "^1.5.0",
-    "start-server-and-test": "^2.0.3",
-    "@pact-foundation/pact": "^11.0.2",
-    "@pact-foundation/pact-node": "^10.17.7",
-    "pact-broker-client": "^1.0.0"
+    "start-server-and-test": "^2.0.3"
   },
   "overrides": {
     "esbuild": "0.18.20",
